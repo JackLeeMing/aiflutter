@@ -1,0 +1,2 @@
+dart run flutter_launcher_icons:generate
+flutter pub run flutter_launcher_icons

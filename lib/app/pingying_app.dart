@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:lpinyin/lpinyin.dart';
 import 'package:pinyin/pinyin.dart';
 import 'package:ruby_text/ruby_text.dart';
-import '../pages/sales_statistics_page.dart';
+// import '../pages/sales_statistics_page.dart';
 
 class PingYingApp extends StatelessWidget {
   const PingYingApp({super.key});
@@ -18,7 +18,7 @@ class PingYingApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.light,
       ),
-      home: const SalesStatisticsPage(),
+      home: const HomePage(),
     );
   }
 }
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: EdgeInsets.all(16),
-              child: Image.asset("assets/icon2.png"),
+              child: Image.asset("assets/flutter100.png"),
             ),
           ],
         ),

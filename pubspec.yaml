@@ -58,6 +58,7 @@ dependencies:
   graphic: ^2.5.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.3
   flutter_test:
     sdk: flutter
 
@@ -74,10 +75,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/bridge.png
+    - assets/flutter.png
     - assets/app.png
     - assets/welcome.png
-    - assets/icon1.png
-    - assets/icon2.png
+    - assets/flutter100.png
+    - assets/flutter100.png
     - assets/images/
 
 flutter_native_splash:
@@ -87,3 +89,20 @@ flutter_native_splash:
     image: assets/icon2.png
     icon_background_color: "#FFFFFF"
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/flutter100.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/flutter100.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/flutter100.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/flutter100.png"
