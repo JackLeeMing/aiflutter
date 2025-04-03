@@ -56,6 +56,8 @@ dependencies:
   azlistview_plus: ^3.0.0
   fl_chart: ^0.66.2
   graphic: ^2.5.1
+  nine_grid_view: ^2.0.0
+  flutter_gallery_assets: ^1.0.2
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3
@@ -81,12 +83,21 @@ flutter:
     - assets/flutter100.png
     - assets/flutter100.png
     - assets/images/
+    - packages/flutter_gallery_assets/people/ali_landscape.png
+    - packages/flutter_gallery_assets/people/square/ali.png
+    - packages/flutter_gallery_assets/people/square/peter.png
+    - packages/flutter_gallery_assets/people/square/sandra.png
+    - packages/flutter_gallery_assets/people/square/stella.png
+    - packages/flutter_gallery_assets/people/square/trevor.png
+    - packages/flutter_gallery_assets/places/india_tanjore_bronze_works.png
+    - packages/flutter_gallery_assets/places/india_tanjore_market_merchant.png
+    - packages/flutter_gallery_assets/places/india_tanjore_thanjavur_temple_carvings.png
 
 flutter_native_splash:
-  image: assets/icon2.png
+  image: assets/flutter100.png
   color: "#FFFFFF"
   android_12:
-    image: assets/icon2.png
+    image: assets/flutter100.png
     icon_background_color: "#FFFFFF"
 
 flutter_launcher_icons:

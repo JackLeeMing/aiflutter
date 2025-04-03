@@ -326,6 +326,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_gallery_assets:
+    dependency: "direct main"
+    description:
+      name: flutter_gallery_assets
+      sha256: f8fecfeebcfbe80a2fabc00c0834046890abe681f59d3e2c5b1028faf887d94b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   flutter_highlight:
     dependency: transitive
     description:
@@ -720,6 +728,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nine_grid_view:
+    dependency: "direct main"
+    description:
+      name: nine_grid_view
+      sha256: "40785a2f73ad541536cbf7fd1010a02f06a51d0bd058d05629a5f04df2d1a086"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   open_filex:
     dependency: "direct main"
     description:
