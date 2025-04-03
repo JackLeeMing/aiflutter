@@ -1,4 +1,4 @@
-# aiflutter
+# AIFlutter 我的 Flutter 学习实践记录 基于 3.27.4 版本
 
 A new Flutter project.
 
