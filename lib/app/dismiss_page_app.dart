@@ -3,20 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-void main() {
-  runApp(MaterialApp(home: SimpleExample()));
-}
-
 /// This is a basic usage of DismissiblePage
 /// For more examples check the demo/folder
-class SimpleExample extends StatelessWidget {
+class DismissPageApp extends StatelessWidget {
   static const images = [
     'assets/images/home_1.png',
     'assets/images/home_2.png',
-    "assets/images/fuck_putin.png",
+    "assets/images/joker.png",
+    "assets/images/lion_king.jpg",
+    "assets/images/the_irishman.jpg",
   ];
 
-  const SimpleExample({super.key});
+  const DismissPageApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class SimpleExample extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Simple Example'),
+        title: Text('DismissPageApp Simple Example'),
         titleTextStyle: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
@@ -33,13 +31,13 @@ class SimpleExample extends StatelessWidget {
       ),
       body: Swiper(
         autoplay: true,
-        itemCount: 3,
+        itemCount: images.length,
         loop: true,
         pagination: const SwiperPagination(
             alignment: Alignment.bottomCenter,
             builder: TDSwiperPagination.dotsBar),
         itemBuilder: (BuildContext context, int index) {
-          return buildEle(context, images[index % 3]);
+          return buildEle(context, images[index % images.length]);
         },
       ),
     );

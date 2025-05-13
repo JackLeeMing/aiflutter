@@ -1,6 +1,9 @@
 import 'dart:io';
 
-import 'package:aiflutter/app/dismiss_page_app.dart';
+// import 'package:aiflutter/app/dismiss_page_app.dart'; // 轮播图+点击项目进入详情页，详情页可以滑动关闭消失
+// import 'package:aiflutter/app/movieApp/movie_app_home.dart'; // 适合做有限数量的带图片的项目选择器
+// import 'package:aiflutter/app/flutter_liquid_swipe_app.dart'; // LiquidSwipeApp
+import 'package:aiflutter/app/liquid_swipe_app.dart'; // WithBuilderApp
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -31,7 +34,7 @@ class Main extends StatelessWidget {
       title: 'TestApp',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
-      home: SimpleExample(),
+      home: WithBuilderApp(),
     );
   }
 }
