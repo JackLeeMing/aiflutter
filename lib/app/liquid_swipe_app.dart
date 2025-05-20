@@ -27,7 +27,7 @@ class _WithBuilder extends State<WithBuilderApp> {
   late LiquidController liquidController;
   late UpdateType updateType;
 
-  List<ItemData> data = [
+  List<ItemData> dataList = [
     ItemData(
       Colors.blue,
       "assets/images/home_1.png",
@@ -37,7 +37,7 @@ class _WithBuilder extends State<WithBuilderApp> {
     ),
     ItemData(
       Colors.deepPurpleAccent,
-      "assets/images/home_1.png",
+      "assets/images/home_2.png",
       "Take a",
       "Look At",
       "Liquid Swipe",
@@ -51,7 +51,7 @@ class _WithBuilder extends State<WithBuilderApp> {
     ),
     ItemData(
       Colors.yellow,
-      "assets/images/home_1.png",
+      "assets/images/home_2.png",
       "Can be",
       "Used for",
       "Onboarding design",
@@ -65,7 +65,7 @@ class _WithBuilder extends State<WithBuilderApp> {
     ),
     ItemData(
       Colors.red,
-      "assets/images/home_1.png",
+      "assets/images/home_2.png",
       "Do",
       "try it",
       "Thank you",
@@ -97,110 +97,120 @@ class _WithBuilder extends State<WithBuilderApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            LiquidSwipe.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: double.infinity,
-                  color: data[index].color,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Image.asset(
-                        data[index].image,
-                        height: 300,
-                        fit: BoxFit.contain,
-                      ),
-                      Padding(padding: EdgeInsets.all(index != 4 ? 24.0 : 0)),
-                      index == 4
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 70.0,
-                              ),
-                              child: ExampleSlider(),
-                            )
-                          : SizedBox.shrink(),
-                      Column(
-                        children: <Widget>[
-                          Text(data[index].text1, style: WithPages.style),
-                          Text(data[index].text2, style: WithPages.style),
-                          Text(data[index].text3, style: WithPages.style),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-              positionSlideIcon: 0.8,
-              slideIconWidget: Icon(Icons.arrow_back_ios),
-              onPageChangeCallback: pageChangeCallback,
-              waveType: WaveType.liquidReveal,
-              liquidController: liquidController,
-              fullTransitionValue: 880,
-              enableSideReveal: true,
-              preferDragFromRevealedArea: true,
-              enableLoop: true,
-              ignoreUserGestureWhileAnimating: true,
-            ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: <Widget>[
-                  Expanded(child: SizedBox()),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List<Widget>.generate(data.length, _buildDot),
-                  ),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('My App'),
+        foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.green, Colors.purple],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: TextButton(
-                  onPressed: () {
-                    liquidController.animateToPage(
-                      page: data.length - 1,
-                      duration: 700,
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white.withValues(alpha: .01),
-                    foregroundColor: Colors.black,
-                  ),
-                  child: Text("Skip to End"),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: TextButton(
-                  onPressed: () {
-                    liquidController.jumpToPage(
-                      page: liquidController.currentPage + 1 > data.length - 1
-                          ? 0
-                          : liquidController.currentPage + 1,
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white.withValues(alpha: 0.01),
-                    foregroundColor: Colors.black,
-                  ),
-                  child: Text("Next"),
-                ),
-              ),
-            ),
-          ],
+              border: Border.all(color: Colors.red, width: 1)),
         ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          LiquidSwipe.builder(
+            itemCount: dataList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: double.infinity,
+                color: dataList[index].color,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Image.asset(
+                      dataList[index].image,
+                      height: 360,
+                      fit: BoxFit.contain,
+                    ),
+                    Padding(padding: EdgeInsets.all(index != 4 ? 24.0 : 0)),
+                    index == 4
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 70.0,
+                            ),
+                            child: ExampleSlider(),
+                          )
+                        : SizedBox.shrink(),
+                    Column(
+                      children: <Widget>[
+                        Text(dataList[index].text1, style: WithPages.style),
+                        Text(dataList[index].text2, style: WithPages.style),
+                        Text(dataList[index].text3, style: WithPages.style),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+            positionSlideIcon: 0.8,
+            slideIconWidget: Icon(Icons.arrow_back_ios),
+            onPageChangeCallback: pageChangeCallback,
+            waveType: WaveType.liquidReveal,
+            liquidController: liquidController,
+            fullTransitionValue: 880,
+            enableSideReveal: true,
+            preferDragFromRevealedArea: true,
+            enableLoop: true,
+            ignoreUserGestureWhileAnimating: true,
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Expanded(child: SizedBox()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List<Widget>.generate(dataList.length, _buildDot),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: TextButton(
+                onPressed: () {
+                  liquidController.animateToPage(
+                    page: dataList.length - 1,
+                    duration: 700,
+                  );
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white.withValues(alpha: .01),
+                  foregroundColor: Colors.black,
+                ),
+                child: Text("Skip to End"),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: TextButton(
+                onPressed: () {
+                  liquidController.jumpToPage(
+                    page: liquidController.currentPage + 1 > dataList.length - 1 ? 0 : liquidController.currentPage + 1,
+                  );
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white.withValues(alpha: 0.01),
+                  foregroundColor: Colors.black,
+                ),
+                child: Text("Next"),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -430,9 +440,7 @@ class _WithPages extends State<WithPages> {
                 child: TextButton(
                   onPressed: () {
                     liquidController.jumpToPage(
-                      page: liquidController.currentPage + 1 > pages.length - 1
-                          ? 0
-                          : liquidController.currentPage + 1,
+                      page: liquidController.currentPage + 1 > pages.length - 1 ? 0 : liquidController.currentPage + 1,
                     );
                   },
                   style: TextButton.styleFrom(

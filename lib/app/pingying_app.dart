@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: EdgeInsets.all(16),
-              child: Image.asset("assets/flutter100.png"),
+              child: Image.asset("assets/flutter.png"),
             ),
           ],
         ),

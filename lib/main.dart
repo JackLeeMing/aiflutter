@@ -1,40 +1,75 @@
 import 'dart:io';
 
-// import 'package:aiflutter/app/dismiss_page_app.dart'; // 轮播图+点击项目进入详情页，详情页可以滑动关闭消失
-// import 'package:aiflutter/app/movieApp/movie_app_home.dart'; // 适合做有限数量的带图片的项目选择器
-// import 'package:aiflutter/app/flutter_liquid_swipe_app.dart'; // LiquidSwipeApp
-import 'package:aiflutter/app/liquid_swipe_app.dart'; // WithBuilderApp
+import 'package:aiflutter/app/animationApp/home_screen.dart';
+import 'package:aiflutter/utils/platform.dart';
+import 'package:aiflutter/widgets/window.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:toastification/toastification.dart';
 
-void main() {
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  await await Future.delayed(Duration.zero);
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     Phoenix(
-      child: const Main(),
+      child: const AIFlutterApp(),
     ),
   );
-  if (Platform.isAndroid) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-    );
+  // 设置窗口大小（仅限桌面平台）
+  if (PlatformTool.isDesktop()) {
+    doWhenWindowReady(() {
+      const initialSize = Size(600, 800);
+      appWindow.minSize = initialSize;
+      appWindow.maxSize = Size(800, 800);
+      appWindow.size = initialSize;
+      appWindow.alignment = Alignment.center;
+      appWindow.title = "AI Flutter";
+      if (PlatformTool.isWindows()) {
+        WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
+          appWindow.size = initialSize + const Offset(0, 1);
+        });
+      }
+      appWindow.show();
+    });
   }
-  FlutterNativeSplash.remove();
 }
 
-class Main extends StatelessWidget {
-  const Main({super.key});
+class AIFlutterApp extends StatefulWidget {
+  const AIFlutterApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _AIFlutterAppState();
+}
+
+class _AIFlutterAppState extends State<AIFlutterApp> {
+  @override
+  void initState() {
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      );
+    }
+    FlutterNativeSplash.remove();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TestApp',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      home: WithBuilderApp(),
+    return ToastificationWrapper(
+      child: MaterialApp(
+        title: 'TestApp',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        ),
+        home: WindowFrameWidget(
+          child: AnimationHomeScreen(),
+        ),
+      ),
     );
   }
 }
