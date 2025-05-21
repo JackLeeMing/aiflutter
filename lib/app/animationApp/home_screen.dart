@@ -1,9 +1,28 @@
+import 'package:aiflutter/app/animationApp/question_screen.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-
-import 'question_screen.dart';
 
 class AnimationHomeScreen extends StatelessWidget {
   const AnimationHomeScreen({super.key});
+
+  void toNextPage(BuildContext context) {
+    // Show the question screen to start the game
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return QuestionScreen();
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeThroughTransition(
+            animation: animation, // NEW
+            secondaryAnimation: secondaryAnimation, // NEW
+            child: child, // NEW
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +41,11 @@ class AnimationHomeScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Show the question screen to start the game
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return QuestionScreen();
-                    },
-                  ),
+                  MaterialPageRoute(builder: (context) {
+                    return const QuestionScreen(); // NEW
+                  }), // NEW
                 );
               },
               child: Text('New Game'),

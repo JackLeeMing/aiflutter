@@ -32,7 +32,7 @@ class AnimatedStar extends StatelessWidget {
   final Duration _duration = const Duration(milliseconds: 1000);
   final Color _deactivatedColor = Colors.grey.shade400;
   final Color _activatedColor = Colors.yellow.shade700;
-  final Curve _curve = Curves.elasticOut;
+  // final Curve _curve = Curves.elasticOut;
   AnimatedStar({super.key, required this.isAvtive});
 
   @override
@@ -42,7 +42,7 @@ class AnimatedStar extends StatelessWidget {
       scale: isAvtive ? 1.0 : 0.5,
       duration: _duration,
       child: TweenAnimationBuilder(
-        curve: _curve,
+        curve: Curves.elasticOut,
         tween: ColorTween(
           begin: _deactivatedColor,
           end: isAvtive ? _activatedColor : _deactivatedColor,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:aiflutter/app/animationApp/home_screen.dart';
 import 'package:aiflutter/utils/platform.dart';
 import 'package:aiflutter/widgets/window.dart';
+import 'package:animations/animations.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,6 +66,16 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: PredictiveBackPageTransitionsBuilder(), // NEW
+              TargetPlatform.iOS: FadeThroughPageTransitionsBuilder(), // NEW
+              TargetPlatform.macOS: FadeThroughPageTransitionsBuilder(), // NEW
+              TargetPlatform.windows: FadeThroughPageTransitionsBuilder(), // NEW
+              TargetPlatform.linux: FadeThroughPageTransitionsBuilder(), // NEW
+            },
+          ),
         ),
         home: WindowFrameWidget(
           child: AnimationHomeScreen(),

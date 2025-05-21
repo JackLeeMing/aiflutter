@@ -1,3 +1,4 @@
+import 'package:aiflutter/app/animationApp/flip_effect.dart';
 import 'package:aiflutter/app/animationApp/scoreboard.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
@@ -90,8 +91,31 @@ class QuestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      //new
-      // 注意：请务必为 Card widget 提供键，以便 AnimatedSwitcher 知道何时发生变化！
+      layoutBuilder: (currentChild, previousChildren) {
+        return Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
+      transitionBuilder: (child, animation) {
+        // 分开
+        final curveAnimation = CurveTween(curve: Curves.easeInCubic).animate(animation);
+        final offsetAnimation = Tween<Offset>(begin: Offset(-0.1, 0.0), end: Offset.zero).animate(curveAnimation);
+        // 合并 借助 drive 函数
+        // Animation  Animatable
+        // var offsetAnimation = animation.drive(CurveTween(curve: Curves.easeInCubic)).drive(Tween<Offset>(begin: Offset(-0.1, 0.0), end: Offset.zero));
+        var fadeInAnimation = curveAnimation;
+        return FadeTransition(
+          opacity: fadeInAnimation,
+          child: SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          ),
+        );
+      },
       duration: const Duration(milliseconds: 300),
       child: Card(
         key: ValueKey(question), //new
@@ -131,26 +155,29 @@ class AnswerCards extends StatelessWidget {
         if (correctAnswer == index) {
           color = Theme.of(context).colorScheme.tertiaryContainer;
         }
-        return Card.filled(
-          key: ValueKey(answers[index]),
-          color: color,
-          elevation: 2,
-          margin: EdgeInsets.all(8),
-          clipBehavior: Clip.hardEdge,
-          child: InkWell(
-            onTap: () => onTapped(index),
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(
-                child: Text(
-                  answers.length > index ? answers[index] : '',
-                  style: Theme.of(context).textTheme.titleMedium,
-                  overflow: TextOverflow.clip,
+        return CardFlipEffect(
+            delayAmount: index.toDouble() / 2,
+            duration: const Duration(milliseconds: 300),
+            child: Card.filled(
+              key: ValueKey(answers[index]),
+              color: color,
+              elevation: 2,
+              margin: EdgeInsets.all(8),
+              clipBehavior: Clip.hardEdge,
+              child: InkWell(
+                onTap: () => onTapped(index),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      answers.length > index ? answers[index] : '',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      overflow: TextOverflow.clip,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
+            ));
       }),
     );
   }
