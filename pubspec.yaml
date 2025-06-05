@@ -79,6 +79,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   bitsdojo_window: ^0.1.6
   animated_toggle_switch: ^0.8.5
+  package_info_plus: ^8.3.0
+  crypto: ^3.0.6
 
 dependency_overrides:
   tdesign_flutter:

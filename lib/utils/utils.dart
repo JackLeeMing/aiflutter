@@ -8,8 +8,7 @@ class Utils {
     return 'assets/images/$name.$format';
   }
 
-  static Future<T?> pushPage<T extends Object>(
-      BuildContext context, Widget page) {
+  static Future<T?> pushPage<T extends Object>(BuildContext context, Widget page) {
     return Navigator.push(
       context,
       CupertinoPageRoute(builder: (ctx) => page),
@@ -31,8 +30,7 @@ class Utils {
       return Image.network(url, fit: BoxFit.cover);
     }
     if (url.endsWith('.png')) {
-      return Image.asset(url,
-          fit: BoxFit.cover, package: 'flutter_gallery_assets');
+      return Image.asset(url, fit: BoxFit.cover, package: 'flutter_gallery_assets');
     }
     //return Image.file(File(url), fit: BoxFit.cover);
     return Image.asset(getImgPath(url), fit: BoxFit.cover);
@@ -45,8 +43,7 @@ class Utils {
       return Image.network(url, fit: BoxFit.cover);
     }
     if (url.endsWith('.png')) {
-      return Image.asset(url,
-          fit: BoxFit.cover, package: 'flutter_gallery_assets');
+      return Image.asset(url, fit: BoxFit.cover, package: 'flutter_gallery_assets');
     }
     //return Image.file(File(url), fit: BoxFit.cover);
     return Image.asset(getImgPath(url), fit: BoxFit.cover);
