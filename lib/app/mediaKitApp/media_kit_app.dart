@@ -17,6 +17,12 @@ class _MediaKitPlayerState extends State<MediaKitPlayerApp> {
   late final Player player = Player();
   late final VideoController controller = VideoController(player);
   bool isPlaying = false;
+  String videpType = "flv";
+  final videoUrlMap = {
+    'flv': 'https://www.sensorcmd.com/video6/rtp/34020000001110000016_61062900041317000010.live.flv?vip=smart_guy',
+    'hls': 'https://www.sensorcmd.com/video6/rtp/34020000001110000016_61062900041317000010/hls.m3u8?vip=smart_guy',
+    'mp4': 'https://www.sensorcmd.com/video6/rtp/34020000001110000016_61062900041317000010.live.mp4?vip=smart_guy',
+  };
 
   @override
   void initState() {
@@ -74,10 +80,81 @@ class _MediaKitPlayerState extends State<MediaKitPlayerApp> {
       home: WindowFrameWidget(
         child: Scaffold(
           body: Center(
-            child: SizedBox(
-              width: double.infinity,
-              height: 350,
-              child: Video(controller: controller),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(videpType),
+                SizedBox(width: 16),
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            videpType = "flv";
+                          });
+                        },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                          ),
+                          child: Center(
+                            child: Text("FLV"),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            videpType = "hls";
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                          ),
+                          height: 50,
+                          child: Center(
+                            child: Text("HLS"),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            videpType = "mp4";
+                          });
+                        },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                          ),
+                          child: Center(
+                            child: Text("MP4"),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                ),
+                SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 400,
+                  child: Video(controller: controller),
+                )
+              ],
             ),
           ),
           floatingActionButton: FloatingActionButton(
@@ -87,8 +164,7 @@ class _MediaKitPlayerState extends State<MediaKitPlayerApp> {
                   player.pause();
                 } else {
                   player.open(
-                    Media(
-                        'https://www.sensorcmd.com/video6/rtp/34020000001110000016_61062900041317000010.live.mp4?vip=smart_guy'),
+                    Media(videoUrlMap[videpType]!),
                   );
                   player.play();
                 }
