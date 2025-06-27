@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:aiflutter/app/mediaKitApp/media_kit_app.dart';
 import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/utils/package_info.dart';
 import 'package:aiflutter/utils/platform.dart';
@@ -12,10 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   await Future.delayed(Duration.zero);
   await Util.initStorageDir();
   await initPackageInfo();
@@ -23,7 +26,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     Phoenix(
-      child: const AIFlutterApp(),
+      child: const MediaKitPlayerApp(),
     ),
   );
   // 设置窗口大小（仅限桌面平台）
