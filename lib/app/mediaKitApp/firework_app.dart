@@ -31,61 +31,63 @@ class Firework {
 
 // MARK: - 烟花控制器
 /// 控制器类，管理烟花和粒子的物理效果及生命周期
-class FireworksController {
+class FireworksController extends ChangeNotifier {
   final List<Firework> _fireworks = [];
   final List<Particle> _particles = [];
   final Random _random = Random();
-  late AnimationController _animationController;
-  late Timer _launchTimer;
+  Timer? _launchTimer;
+  Timer? _updateTimer;
   bool isRunning = false;
-  late Size _canvasSize;
+  Size _canvasSize = Size.zero;
 
   static const double _gravity = 0.05;
   static const double _friction = 0.95;
   static const int _maxTrailLength = 15;
-  static const int _maxParticles = 500;
-  static const int _maxFireworks = 15;
+  static const int _maxParticles = 400; // 适当增加支持多烟花
+  static const int _maxFireworks = 12; // 适当增加支持多烟花
+  static const int _minFireworksPerLaunch = 2; // 每次最少发射数量
+  static const int _maxFireworksPerLaunch = 5; // 每次最多发射数量
 
   List<Firework> get fireworks => _fireworks;
   List<Particle> get particles => _particles;
 
-  FireworksController(TickerProvider vsync) {
-    _animationController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 16), // 约60fps的刷新率
-    )..addListener(() {
-        if (isRunning) {
-          updatePhysics(_canvasSize);
-          print('updatePhysics');
-        }
-      });
-  }
-
   /// 启动动画和烟花发射
-  void start(Size? size) {
-    if (size == null) return;
+  void start(Size size) {
+    if (size.isEmpty) return;
+    stop(); // 先停止之前的动画
+
     _canvasSize = size;
     isRunning = true;
-    // 确保动画控制器持续循环，不会停止
-    _animationController.repeat();
-    // 定期发射烟花
-    _launchTimer = Timer.periodic(const Duration(milliseconds: 800), (timer) {
+
+    // 使用60fps的更新频率
+    _updateTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       if (isRunning) {
-        launchFirework(_canvasSize);
+        updatePhysics(_canvasSize);
+        notifyListeners(); // 通知UI更新
       }
     });
+
+    // 定期发射烟花组
+    _launchTimer = Timer.periodic(const Duration(milliseconds: 1500), (timer) {
+      if (isRunning) {
+        launchFireworkBatch(_canvasSize);
+      }
+    });
+
+    // 立即发射第一批烟花
+    launchFireworkBatch(_canvasSize);
   }
 
   /// 停止动画和清理所有对象
   void stop() {
-    if (!isRunning) return;
     isRunning = false;
-    _animationController.stop();
-    if (_launchTimer.isActive) {
-      _launchTimer.cancel();
-    }
+    _updateTimer?.cancel();
+    _updateTimer = null;
+    _launchTimer?.cancel();
+    _launchTimer = null;
     _fireworks.clear();
     _particles.clear();
+    notifyListeners();
   }
 
   /// 更新所有烟花和粒子的物理状态
@@ -123,20 +125,55 @@ class FireworksController {
     });
   }
 
+  /// 批量发射多个烟花
+  void launchFireworkBatch(Size size) {
+    if (size.width <= 0 || size.height <= 0) return;
+
+    // 随机决定本次发射的烟花数量
+    final launchCount = _random.nextInt(_maxFireworksPerLaunch - _minFireworksPerLaunch + 1) + _minFireworksPerLaunch;
+
+    for (int i = 0; i < launchCount; i++) {
+      if (_fireworks.length < _maxFireworks) {
+        // 添加一些延迟让烟花不完全同时发射，形成更自然的效果
+        Timer(Duration(milliseconds: i * 150), () {
+          if (isRunning) {
+            launchFirework(size);
+          }
+        });
+      }
+    }
+  }
+
+  /// 壮观发射 - 手动触发大量烟花
+  void launchSpectacularBatch(Size size) {
+    if (size.width <= 0 || size.height <= 0) return;
+
+    const spectacularCount = 8; // 壮观模式发射8颗
+
+    for (int i = 0; i < spectacularCount; i++) {
+      // 稍微缩短间隔时间，制造更密集的效果
+      Timer(Duration(milliseconds: i * 100), () {
+        if (isRunning && _fireworks.length < _maxFireworks + 4) {
+          // 允许超出一些限制
+          launchFirework(size);
+        }
+      });
+    }
+  }
+
   /// 随机发射一个新烟花
   void launchFirework(Size size) {
-    print('launchFirework');
-    if (_fireworks.length < _maxFireworks) {
+    if (_fireworks.length < _maxFireworks && size.width > 0 && size.height > 0) {
       final startX = _random.nextDouble() * size.width;
       final startY = size.height;
-      final targetY = _random.nextDouble() * size.height * 0.6 + size.height * 0.1; // 调整目标高度范围
+      final targetY = _random.nextDouble() * size.height * 0.4 + size.height * 0.2; // 调整目标高度范围
       final color = _randomColor();
 
       _fireworks.add(Firework(
         Offset(startX, startY),
         Offset(
-          (_random.nextDouble() - 0.5) * 2, // 添加轻微的水平偏移
-          -_random.nextDouble() * 4 - 3, // 增加初始向上速度
+          (_random.nextDouble() - 0.5) * 1, // 减少水平偏移
+          -_random.nextDouble() * 6 - 8, // 增加初始向上速度
         ),
         targetY,
         color,
@@ -146,13 +183,13 @@ class FireworksController {
 
   /// 在指定位置爆炸并生成粒子
   void _explode(Offset position, Color color) {
-    final particleCount = _random.nextInt(50) + 70;
+    final particleCount = _random.nextInt(30) + 40; // 减少粒子数量
     for (var i = 0; i < particleCount; i++) {
       if (_particles.length < _maxParticles) {
         final angle = _random.nextDouble() * 2 * pi;
-        final speed = _random.nextDouble() * 5 + 1;
+        final speed = _random.nextDouble() * 8 + 2; // 增加速度
         final velocity = Offset(cos(angle) * speed, sin(angle) * speed);
-        final decay = _random.nextDouble() * 0.03 + 0.01;
+        final decay = _random.nextDouble() * 0.02 + 0.015; // 调整衰减速度
         _particles.add(Particle(position, velocity, color, decay));
       }
     }
@@ -163,8 +200,10 @@ class FireworksController {
     return HSLColor.fromAHSL(1.0, _random.nextDouble() * 360, 1.0, 0.5).toColor();
   }
 
+  @override
   void dispose() {
-    _animationController.dispose();
+    stop();
+    super.dispose();
   }
 }
 
@@ -179,34 +218,37 @@ class FireworksPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 绘制半透明黑色矩形，制造拖尾效果
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..color = Colors.black.withValues(alpha: .1));
-
-    // 使用 BlendMode.plus 在重叠时叠加颜色，产生发光效果
-    canvas.saveLayer(Rect.fromLTWH(0, 0, size.width, size.height), Paint()..blendMode = BlendMode.plus);
-
     // 绘制烟花
     for (final firework in fireworks) {
-      canvas.drawCircle(firework.position, 2, Paint()..color = firework.color);
+      final paint = Paint()
+        ..color = firework.color
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(firework.position, 3, paint);
+      // 添加发光效果
+      final glowPaint = Paint()
+        ..color = firework.color.withValues(alpha: 0.3)
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(firework.position, 6, glowPaint);
     }
 
     // 绘制粒子和拖尾
     for (final particle in particles) {
       // 绘制粒子本体
       final paint = Paint()..color = particle.color.withValues(alpha: particle.alpha);
-      canvas.drawCircle(particle.position, 1.5, paint);
+      canvas.drawCircle(particle.position, 2, paint);
 
       // 绘制拖尾
       for (var i = 0; i < particle.trail.length; i++) {
-        final trailPaint = Paint()
-          ..color = particle.color.withValues(alpha: particle.alpha * (i / particle.trail.length))
-          ..style = PaintingStyle.fill;
-        final radius = 1.5 * (i / particle.trail.length);
-        canvas.drawCircle(particle.trail[i], radius, trailPaint);
+        final trailAlpha = particle.alpha * (i / particle.trail.length) * 0.5;
+        if (trailAlpha > 0.1) {
+          final trailPaint = Paint()
+            ..color = particle.color.withValues(alpha: trailAlpha)
+            ..style = PaintingStyle.fill;
+          final radius = 2 * (i / particle.trail.length);
+          canvas.drawCircle(particle.trail[i], radius, trailPaint);
+        }
       }
     }
-
-    canvas.restore();
   }
 
   @override
@@ -225,18 +267,13 @@ class FireworksApp extends StatefulWidget {
   State<FireworksApp> createState() => _FireworksPageState();
 }
 
-class _FireworksPageState extends State<FireworksApp> with SingleTickerProviderStateMixin {
+class _FireworksPageState extends State<FireworksApp> {
   late final FireworksController _fireworksController;
 
   @override
   void initState() {
     super.initState();
-    // 驱动动画的控制器
-    _fireworksController = FireworksController(this);
-    // 页面加载后自动开始动画
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fireworksController.start(context.size);
-    });
+    _fireworksController = FireworksController();
   }
 
   @override
@@ -265,49 +302,72 @@ class _FireworksPageState extends State<FireworksApp> with SingleTickerProviderS
       home: WindowFrameWidget(
         child: Scaffold(
           backgroundColor: Colors.black,
-          body: Stack(
-            children: [
-              // CustomPaint 绘制烟花效果
-              AnimatedBuilder(
-                animation: _fireworksController._animationController,
-                builder: (context, child) {
-                  return CustomPaint(
-                    size: Size.infinite,
-                    painter: FireworksPainter(
-                      _fireworksController.fireworks,
-                      _fireworksController.particles,
-                    ),
-                  );
-                },
-              ),
-              // 控制按钮
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _fireworksController.stop();
-                        },
-                        child: const Text('停止'),
-                      ),
-                      const SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // 先停止现有动画，然后重新开始
-                          _fireworksController.stop();
-                          _fireworksController.start(context.size);
-                        },
-                        child: const Text('开始'),
-                      ),
-                    ],
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              final size = Size(constraints.maxWidth, constraints.maxHeight);
+              return Stack(
+                children: [
+                  // CustomPaint 绘制烟花效果
+                  ListenableBuilder(
+                    listenable: _fireworksController,
+                    builder: (context, child) {
+                      return CustomPaint(
+                        size: size,
+                        painter: FireworksPainter(
+                          _fireworksController.fireworks,
+                          _fireworksController.particles,
+                        ),
+                      );
+                    },
                   ),
-                ),
-              ),
-            ],
+                  // 控制按钮
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // 壮观发射按钮
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.amber,
+                              foregroundColor: Colors.black,
+                            ),
+                            onPressed: _fireworksController.isRunning
+                                ? () {
+                                    _fireworksController.launchSpectacularBatch(size);
+                                  }
+                                : null,
+                            child: const Text('💥 壮观发射'),
+                          ),
+                          const SizedBox(height: 16),
+                          // 控制按钮
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  _fireworksController.stop();
+                                },
+                                child: const Text('停止'),
+                              ),
+                              const SizedBox(width: 20),
+                              ElevatedButton(
+                                onPressed: () {
+                                  _fireworksController.start(size);
+                                },
+                                child: const Text('开始'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
