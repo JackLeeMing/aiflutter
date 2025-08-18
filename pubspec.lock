@@ -1612,14 +1612,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.1"
-  ve_sdk_flutter:
-    dependency: "direct main"
-    description:
-      name: ve_sdk_flutter
-      sha256: "6b775d89392ffbd01d4633250368deecea4e218e24d4e30291b6f1eea6ad928e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.0"
   vector_graphics:
     dependency: transitive
     description:
