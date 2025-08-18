@@ -29,6 +29,15 @@ class Firework {
   Firework(this.position, this.velocity, this.targetY, this.color);
 }
 
+// MARK: - 浪漫动画状态枚举
+enum RomanticAnimationState {
+  initial, // 初始状态，等待3秒
+  countdown, // 10秒倒计时
+  loveText, // 显示"我喜欢你"文字
+  heartAnimation, // 跳动的爱心
+  heartWithText, // 心形上显示文字的组合效果
+}
+
 // MARK: - 烟花控制器
 /// 控制器类，管理烟花和粒子的物理效果及生命周期
 class FireworksController extends ChangeNotifier {
@@ -37,8 +46,24 @@ class FireworksController extends ChangeNotifier {
   final Random _random = Random();
   Timer? _launchTimer;
   Timer? _updateTimer;
+  Timer? _romanticTimer;
   bool isRunning = false;
   Size _canvasSize = Size.zero;
+
+  // 浪漫动画相关状态
+  RomanticAnimationState _romanticState = RomanticAnimationState.initial;
+  int _countdownValue = 10;
+  double _heartScale = 1.0;
+  double _heartAlpha = 1.0;
+  bool _heartBeating = false;
+  bool _heartFadingOut = false;
+  bool _animationCompleted = false;
+
+  // 打字机效果相关状态
+  String _displayedText = '';
+  int _currentCharIndex = 0;
+  final String _fullText = '我喜欢你';
+  Timer? _typingTimer;
 
   static const double _gravity = 0.05;
   static const double _friction = 0.95;
@@ -51,6 +76,14 @@ class FireworksController extends ChangeNotifier {
   List<Firework> get fireworks => _fireworks;
   List<Particle> get particles => _particles;
 
+  // 浪漫动画状态getter
+  RomanticAnimationState get romanticState => _romanticState;
+  int get countdownValue => _countdownValue;
+  double get heartScale => _heartScale;
+  double get heartAlpha => _heartAlpha;
+  bool get animationCompleted => _animationCompleted;
+  String get displayedText => _displayedText;
+
   /// 启动动画和烟花发射
   void start(Size size) {
     if (size.isEmpty) return;
@@ -58,11 +91,23 @@ class FireworksController extends ChangeNotifier {
 
     _canvasSize = size;
     isRunning = true;
+    _romanticState = RomanticAnimationState.initial;
+    _countdownValue = 10;
+    _heartScale = 1.0;
+    _heartAlpha = 1.0;
+    _heartBeating = false;
+    _heartFadingOut = false;
+    _animationCompleted = false;
+
+    // 重置打字机效果
+    _displayedText = '';
+    _currentCharIndex = 0;
 
     // 使用60fps的更新频率
     _updateTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       if (isRunning) {
         updatePhysics(_canvasSize);
+        _updateHeartAnimation(); // 更新爱心动画
         notifyListeners(); // 通知UI更新
       }
     });
@@ -76,6 +121,9 @@ class FireworksController extends ChangeNotifier {
 
     // 立即发射第一批烟花
     launchFireworkBatch(_canvasSize);
+
+    // 启动浪漫动画序列
+    _startRomanticSequence();
   }
 
   /// 停止动画和清理所有对象
@@ -85,6 +133,10 @@ class FireworksController extends ChangeNotifier {
     _updateTimer = null;
     _launchTimer?.cancel();
     _launchTimer = null;
+    _romanticTimer?.cancel();
+    _romanticTimer = null;
+    _typingTimer?.cancel();
+    _typingTimer = null;
     _fireworks.clear();
     _particles.clear();
     notifyListeners();
@@ -97,6 +149,13 @@ class FireworksController extends ChangeNotifier {
       isRunning = true;
     }
     return isRunning;
+  }
+
+  /// 重新开始整个浪漫动画序列
+  void restart() {
+    if (_canvasSize != Size.zero) {
+      start(_canvasSize);
+    }
   }
 
   /// 更新所有烟花和粒子的物理状态
@@ -209,6 +268,104 @@ class FireworksController extends ChangeNotifier {
     return HSLColor.fromAHSL(1.0, _random.nextDouble() * 360, 1.0, 0.5).toColor();
   }
 
+  /// 启动浪漫动画序列
+  void _startRomanticSequence() {
+    // 延时3秒后开始倒计时
+    _romanticTimer = Timer(const Duration(seconds: 3), () {
+      if (isRunning) {
+        _startCountdown();
+      }
+    });
+  }
+
+  /// 开始10秒倒计时
+  void _startCountdown() {
+    _romanticState = RomanticAnimationState.countdown;
+    _countdownValue = 10;
+    notifyListeners();
+
+    // 每秒更新倒计时
+    _romanticTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (isRunning && _countdownValue > 0) {
+        _countdownValue--;
+        notifyListeners();
+      } else {
+        timer.cancel();
+        if (isRunning) {
+          _showLoveText();
+        }
+      }
+    });
+  }
+
+  /// 显示"我喜欢你"文字
+  void _showLoveText() {
+    // 直接跳转到心形+文字组合效果
+    _startHeartWithText();
+  }
+
+  /// 开始打字机效果
+  void _startTypingEffect() {
+    _typingTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
+      if (_currentCharIndex < _fullText.length) {
+        _displayedText += _fullText[_currentCharIndex];
+        _currentCharIndex++;
+        notifyListeners();
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  /// 开始心形+文字组合效果
+  void _startHeartWithText() {
+    _romanticState = RomanticAnimationState.heartWithText;
+    _heartBeating = true;
+    _heartAlpha = 1.0;
+    _heartFadingOut = false;
+    _displayedText = '';
+    _currentCharIndex = 0;
+    notifyListeners();
+
+    // 开始打字机效果
+    _startTypingEffect();
+
+    // 10秒后开始淡出效果
+    _romanticTimer = Timer(const Duration(seconds: 10), () {
+      if (isRunning && _romanticState == RomanticAnimationState.heartWithText) {
+        _startHeartFadeOut();
+      }
+    });
+  }
+
+
+
+  /// 开始心形淡出效果
+  void _startHeartFadeOut() {
+    _heartFadingOut = true;
+    notifyListeners();
+  }
+
+    /// 更新爱心动画效果
+  void _updateHeartAnimation() {
+    if (_heartBeating && (_romanticState == RomanticAnimationState.heartAnimation || _romanticState == RomanticAnimationState.heartWithText)) {
+      // 心跳效果：使用正弦波控制缩放
+      final time = DateTime.now().millisecondsSinceEpoch / 1000.0;
+      _heartScale = 1.0 + 0.3 * sin(time * 3.0); // 3.0 控制心跳频率
+      
+      // 处理淡出效果
+      if (_heartFadingOut) {
+        _heartAlpha -= 0.02; // 控制淡出速度
+        if (_heartAlpha <= 0) {
+          _heartAlpha = 0;
+          _heartBeating = false;
+          _romanticState = RomanticAnimationState.initial; // 重置到初始状态
+          _animationCompleted = true; // 标记动画完成
+        }
+      }
+    }
+  }
+
   @override
   void dispose() {
     stop();
@@ -217,6 +374,124 @@ class FireworksController extends ChangeNotifier {
 }
 
 // MARK: - 自定义绘制器
+
+/// 自定义心形绘制器
+class HeartPainter extends CustomPainter {
+  final double scale;
+  final Color color;
+  final double alpha;
+
+  HeartPainter({
+    required this.scale,
+    required this.color,
+    this.alpha = 1.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // 心形的基础大小
+    final baseSize = min(size.width, size.height) * 0.4;
+
+    // 心形中心点
+    final centerX = size.width / 2;
+    final centerY = size.height / 2;
+
+    // 定义多个心形的配置：大小比例、位置偏移、透明度
+    final hearts = [
+      // 主心形
+      {'scale': 1.0, 'offsetX': 0.0, 'offsetY': 0.0, 'alpha': 1.0},
+      // 左上小心形
+      {'scale': 0.3, 'offsetX': -80.0, 'offsetY': -60.0, 'alpha': 0.6},
+      // 右上小心形
+      {'scale': 0.25, 'offsetX': 85.0, 'offsetY': -70.0, 'alpha': 0.5},
+      // 左下小心形
+      {'scale': 0.2, 'offsetX': -90.0, 'offsetY': 80.0, 'alpha': 0.4},
+      // 右下小心形
+      {'scale': 0.28, 'offsetX': 75.0, 'offsetY': 85.0, 'alpha': 0.55},
+      // 额外的小心形
+      {'scale': 0.15, 'offsetX': -40.0, 'offsetY': -120.0, 'alpha': 0.3},
+      {'scale': 0.18, 'offsetX': 110.0, 'offsetY': 20.0, 'alpha': 0.35},
+    ];
+
+    // 绘制每个心形
+    for (final heartConfig in hearts) {
+      final heartScale = heartConfig['scale']!;
+      final offsetX = heartConfig['offsetX']!;
+      final offsetY = heartConfig['offsetY']!;
+      final heartAlpha = heartConfig['alpha']! * alpha;
+
+      _drawSingleHeart(canvas, centerX + offsetX, centerY + offsetY, baseSize * heartScale * scale, heartAlpha);
+    }
+  }
+
+  /// 绘制单个心形
+  void _drawSingleHeart(Canvas canvas, double centerX, double centerY, double heartSize, double heartAlpha) {
+    if (heartAlpha <= 0) return;
+
+    final paint = Paint()
+      ..color = color.withValues(alpha: heartAlpha)
+      ..style = PaintingStyle.fill;
+
+    // 绘制心形路径
+    final path = Path();
+
+    // 心形的数学公式参数化绘制
+    for (double t = 0; t <= 2 * pi; t += 0.01) {
+      // 心形的参数方程
+      final x = 16 * pow(sin(t), 3);
+      final y = -(13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t));
+
+      final scaledX = centerX + x * heartSize / 32;
+      final scaledY = centerY + y * heartSize / 32;
+
+      if (t == 0) {
+        path.moveTo(scaledX, scaledY);
+      } else {
+        path.lineTo(scaledX, scaledY);
+      }
+    }
+    path.close();
+
+    // 为较大的心形绘制发光效果
+    if (heartSize > 20) {
+      for (int i = 0; i < 2; i++) {
+        final glowSize = heartSize * (1.0 + i * 0.1);
+        final glowAlpha = heartAlpha * 0.08 * (2 - i);
+
+        final glowPath = Path();
+        for (double t = 0; t <= 2 * pi; t += 0.02) {
+          final x = 16 * pow(sin(t), 3);
+          final y = -(13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t));
+
+          final scaledX = centerX + x * glowSize / 32;
+          final scaledY = centerY + y * glowSize / 32;
+
+          if (t == 0) {
+            glowPath.moveTo(scaledX, scaledY);
+          } else {
+            glowPath.lineTo(scaledX, scaledY);
+          }
+        }
+        glowPath.close();
+
+        canvas.drawPath(
+            glowPath,
+            Paint()
+              ..color = color.withValues(alpha: glowAlpha)
+              ..style = PaintingStyle.fill
+              ..maskFilter = MaskFilter.blur(BlurStyle.normal, 15.0 + i * 8));
+      }
+    }
+
+    // 绘制主心形
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant HeartPainter oldDelegate) {
+    return oldDelegate.scale != scale || oldDelegate.color != color || oldDelegate.alpha != alpha;
+  }
+}
 
 /// 负责绘制烟花和粒子的 CustomPainter
 class FireworksPainter extends CustomPainter {
@@ -298,6 +573,319 @@ class _FireworksPageState extends State<FireworksApp> {
     super.dispose();
   }
 
+  /// 构建浪漫动画Widget
+  Widget _buildRomanticAnimation() {
+    switch (_fireworksController.romanticState) {
+      case RomanticAnimationState.initial:
+        return const SizedBox.shrink(); // 初始状态不显示任何内容
+
+      case RomanticAnimationState.countdown:
+        return _buildCountdownWidget();
+
+      case RomanticAnimationState.loveText:
+        return _buildLoveTextWidget();
+
+      case RomanticAnimationState.heartAnimation:
+        return _buildHeartWidget();
+        
+      case RomanticAnimationState.heartWithText:
+        return _buildHeartWithTextWidget();
+    }
+  }
+
+  /// 构建倒计时Widget
+  Widget _buildCountdownWidget() {
+    return Center(
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: Container(
+          key: ValueKey(_fireworksController.countdownValue),
+          width: 200, // 固定宽度
+          height: 200, // 固定高度
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
+          ),
+          child: Center(
+            child: Text(
+              '${_fireworksController.countdownValue}',
+              style: const TextStyle(
+                fontSize: 120,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    blurRadius: 20.0,
+                    color: Colors.blue,
+                    offset: Offset(0, 0),
+                  ),
+                  Shadow(
+                    blurRadius: 40.0,
+                    color: Colors.purple,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 构建"我喜欢你"文字Widget
+  Widget _buildLoveTextWidget() {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 背景心形粒子效果
+          ..._buildBackgroundHearts(),
+
+          // 主文字容器
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.elasticOut,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.pink.withValues(alpha: 0.9),
+                  Colors.purple.withValues(alpha: 0.7),
+                  Colors.red.withValues(alpha: 0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pink.withValues(alpha: 0.6),
+                  blurRadius: 40,
+                  spreadRadius: 10,
+                ),
+                BoxShadow(
+                  color: Colors.purple.withValues(alpha: 0.4),
+                  blurRadius: 60,
+                  spreadRadius: 20,
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 50),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 主文字 - 打字机效果
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 100),
+                  child: Text(
+                    key: ValueKey(_fireworksController.displayedText),
+                    _fireworksController.displayedText,
+                    style: TextStyle(
+                      fontSize: 70,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 12,
+                      foreground: Paint()
+                        ..shader = const LinearGradient(
+                          colors: [Colors.white, Colors.yellow, Colors.white],
+                        ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                      shadows: const [
+                        Shadow(
+                          blurRadius: 20.0,
+                          color: Colors.white,
+                          offset: Offset(0, 0),
+                        ),
+                        Shadow(
+                          blurRadius: 40.0,
+                          color: Colors.pink,
+                          offset: Offset(0, 0),
+                        ),
+                        Shadow(
+                          blurRadius: 60.0,
+                          color: Colors.purple,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // 添加闪烁的小心形
+                if (_fireworksController.displayedText.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildPulsingHeart(0),
+                      const SizedBox(width: 15),
+                      _buildPulsingHeart(500),
+                      const SizedBox(width: 15),
+                      _buildPulsingHeart(1000),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建背景心形效果
+  List<Widget> _buildBackgroundHearts() {
+    return List.generate(8, (index) {
+      final angle = (index * 45.0) * (pi / 180);
+      final radius = 150.0 + (index % 3) * 30;
+      final x = cos(angle) * radius;
+      final y = sin(angle) * radius;
+
+      return Positioned(
+        left: 200 + x,
+        top: 200 + y,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 1000 + index * 200),
+          curve: Curves.easeInOut,
+          child: Text(
+            '💖',
+            style: TextStyle(
+              fontSize: 20 + (index % 3) * 10,
+              color: Colors.pink.withValues(alpha: 0.3 + (index % 3) * 0.1),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  /// 构建脉冲跳动的小心形
+  Widget _buildPulsingHeart(int delay) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.8, end: 1.2),
+      duration: const Duration(milliseconds: 800),
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: const Text(
+            '💕',
+            style: TextStyle(
+              fontSize: 24,
+              shadows: [
+                Shadow(
+                  blurRadius: 10.0,
+                  color: Colors.pink,
+                  offset: Offset(0, 0),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      onEnd: () {
+        // 重新启动动画形成循环
+        setState(() {});
+      },
+    );
+  }
+
+  /// 构建心形+文字组合Widget
+  Widget _buildHeartWithTextWidget() {
+    return Center(
+      child: SizedBox(
+        width: 400,
+        height: 400,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // 心形背景
+            CustomPaint(
+              painter: HeartPainter(
+                scale: _fireworksController.heartScale,
+                color: Colors.red,
+                alpha: _fireworksController.heartAlpha,
+              ),
+            ),
+            
+            // 叠加在心形上的文字
+            if (_fireworksController.displayedText.isNotEmpty)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 主文字
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 100),
+                    child: Text(
+                      key: ValueKey(_fireworksController.displayedText),
+                      _fireworksController.displayedText,
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 8,
+                        foreground: Paint()
+                          ..shader = const LinearGradient(
+                            colors: [Colors.white, Colors.yellow, Colors.white],
+                          ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 48.0)),
+                        shadows: const [
+                          Shadow(
+                            blurRadius: 15.0,
+                            color: Colors.white,
+                            offset: Offset(0, 0),
+                          ),
+                          Shadow(
+                            blurRadius: 25.0,
+                            color: Colors.pink,
+                            offset: Offset(0, 0),
+                          ),
+                          Shadow(
+                            blurRadius: 35.0,
+                            color: Colors.purple,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  
+                  // 文字完成后显示小心形
+                  if (_fireworksController.displayedText == '我喜欢你') ...[
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildPulsingHeart(0),
+                        const SizedBox(width: 10),
+                        _buildPulsingHeart(300),
+                        const SizedBox(width: 10),
+                        _buildPulsingHeart(600),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 构建跳动爱心Widget
+  Widget _buildHeartWidget() {
+    return Center(
+      child: SizedBox(
+        width: 400,
+        height: 400,
+        child: CustomPaint(
+          painter: HeartPainter(
+            scale: _fireworksController.heartScale,
+            color: Colors.red,
+            alpha: _fireworksController.heartAlpha,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -336,6 +924,13 @@ class _FireworksPageState extends State<FireworksApp> {
                       );
                     },
                   ),
+                  // 浪漫动画覆盖层
+                  ListenableBuilder(
+                    listenable: _fireworksController,
+                    builder: (context, child) {
+                      return _buildRomanticAnimation();
+                    },
+                  ),
                   // 控制按钮
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -344,9 +939,33 @@ class _FireworksPageState extends State<FireworksApp> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // 控制按钮
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          // 重新开始按钮 - 放在上方
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.pink,
+                              foregroundColor: Colors.white,
+                              elevation: 8,
+                              shadowColor: Colors.pink.withValues(alpha: 0.5),
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            ),
+                            onPressed: () {
+                              _fireworksController.restart();
+                            },
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.refresh),
+                                SizedBox(width: 8),
+                                Text('💕 重新开始'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          // 原有控制按钮 - 放在下方，使用Wrap确保小屏幕兼容性
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 12,
+                            runSpacing: 8,
                             children: [
                               ElevatedButton(
                                 onPressed: () {
@@ -356,6 +975,7 @@ class _FireworksPageState extends State<FireworksApp> {
                                   });
                                 },
                                 child: Row(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(isRunning ? Icons.pause_circle_filled : Icons.play_arrow),
                                     SizedBox(width: 5),
@@ -363,7 +983,6 @@ class _FireworksPageState extends State<FireworksApp> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 20), // 壮观发射按钮
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
