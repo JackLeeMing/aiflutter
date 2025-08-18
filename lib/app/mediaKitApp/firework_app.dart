@@ -45,8 +45,8 @@ class FireworksController extends ChangeNotifier {
   static const int _maxTrailLength = 15;
   static const int _maxParticles = 400; // 适当增加支持多烟花
   static const int _maxFireworks = 12; // 适当增加支持多烟花
-  static const int _minFireworksPerLaunch = 2; // 每次最少发射数量
-  static const int _maxFireworksPerLaunch = 5; // 每次最多发射数量
+  static const int _minFireworksPerLaunch = 3; // 每次最少发射数量
+  static const int _maxFireworksPerLaunch = 12; // 每次最多发射数量
 
   List<Firework> get fireworks => _fireworks;
   List<Particle> get particles => _particles;
@@ -68,7 +68,7 @@ class FireworksController extends ChangeNotifier {
     });
 
     // 定期发射烟花组
-    _launchTimer = Timer.periodic(const Duration(milliseconds: 1500), (timer) {
+    _launchTimer = Timer.periodic(const Duration(milliseconds: 1200), (timer) {
       if (isRunning) {
         launchFireworkBatch(_canvasSize);
       }
@@ -88,6 +88,15 @@ class FireworksController extends ChangeNotifier {
     _fireworks.clear();
     _particles.clear();
     notifyListeners();
+  }
+
+  bool toggle() {
+    if (isRunning) {
+      isRunning = false;
+    } else {
+      isRunning = true;
+    }
+    return isRunning;
   }
 
   /// 更新所有烟花和粒子的物理状态
@@ -131,7 +140,7 @@ class FireworksController extends ChangeNotifier {
 
     // 随机决定本次发射的烟花数量
     final launchCount = _random.nextInt(_maxFireworksPerLaunch - _minFireworksPerLaunch + 1) + _minFireworksPerLaunch;
-
+    // logger.d("launchCount: $launchCount");
     for (int i = 0; i < launchCount; i++) {
       if (_fireworks.length < _maxFireworks) {
         // 添加一些延迟让烟花不完全同时发射，形成更自然的效果
@@ -148,7 +157,7 @@ class FireworksController extends ChangeNotifier {
   void launchSpectacularBatch(Size size) {
     if (size.width <= 0 || size.height <= 0) return;
 
-    const spectacularCount = 8; // 壮观模式发射8颗
+    const spectacularCount = 32; // 壮观模式发射8颗
 
     for (int i = 0; i < spectacularCount; i++) {
       // 稍微缩短间隔时间，制造更密集的效果
@@ -269,11 +278,18 @@ class FireworksApp extends StatefulWidget {
 
 class _FireworksPageState extends State<FireworksApp> {
   late final FireworksController _fireworksController;
+  var isRunning = true;
 
   @override
   void initState() {
     super.initState();
     _fireworksController = FireworksController();
+    // 注册一个回调，在下一帧绘制完成后执行
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && context.size != null) {
+        _fireworksController.start(context.size!);
+      }
+    });
   }
 
   @override
@@ -328,36 +344,37 @@ class _FireworksPageState extends State<FireworksApp> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // 壮观发射按钮
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.amber,
-                              foregroundColor: Colors.black,
-                            ),
-                            onPressed: _fireworksController.isRunning
-                                ? () {
-                                    _fireworksController.launchSpectacularBatch(size);
-                                  }
-                                : null,
-                            child: const Text('💥 壮观发射'),
-                          ),
-                          const SizedBox(height: 16),
                           // 控制按钮
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  _fireworksController.stop();
+                                  var runState = _fireworksController.toggle();
+                                  setState(() {
+                                    isRunning = runState;
+                                  });
                                 },
-                                child: const Text('停止'),
+                                child: Row(
+                                  children: [
+                                    Icon(isRunning ? Icons.pause_circle_filled : Icons.play_arrow),
+                                    SizedBox(width: 5),
+                                    Text(isRunning ? '暂停' : '继续')
+                                  ],
+                                ),
                               ),
-                              const SizedBox(width: 20),
+                              const SizedBox(width: 20), // 壮观发射按钮
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.white,
+                                ),
                                 onPressed: () {
-                                  _fireworksController.start(size);
+                                  if (_fireworksController.isRunning) {
+                                    _fireworksController.launchSpectacularBatch(size);
+                                  }
                                 },
-                                child: const Text('开始'),
+                                child: const Text('💥来波大的'),
                               ),
                             ],
                           ),
