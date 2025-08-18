@@ -300,8 +300,20 @@ class FireworksController extends ChangeNotifier {
 
   /// 显示"我喜欢你"文字
   void _showLoveText() {
-    // 直接跳转到心形+文字组合效果
-    _startHeartWithText();
+    _romanticState = RomanticAnimationState.heartWithText; // loveText
+    _displayedText = '';
+    _currentCharIndex = 0;
+    notifyListeners();
+
+    // 开始打字机效果
+    _startTypingEffect();
+
+    // 3秒后显示纯心形动画
+    _romanticTimer = Timer(const Duration(seconds: 3), () {
+      if (isRunning) {
+        _startHeartAnimation();
+      }
+    });
   }
 
   /// 开始打字机效果
@@ -317,28 +329,21 @@ class FireworksController extends ChangeNotifier {
     });
   }
 
-  /// 开始心形+文字组合效果
-  void _startHeartWithText() {
-    _romanticState = RomanticAnimationState.heartWithText;
+  /// 开始纯心形跳动动画
+  void _startHeartAnimation() {
+    _romanticState = RomanticAnimationState.heartAnimation;
     _heartBeating = true;
     _heartAlpha = 1.0;
     _heartFadingOut = false;
-    _displayedText = '';
-    _currentCharIndex = 0;
     notifyListeners();
-
-    // 开始打字机效果
-    _startTypingEffect();
 
     // 10秒后开始淡出效果
     _romanticTimer = Timer(const Duration(seconds: 10), () {
-      if (isRunning && _romanticState == RomanticAnimationState.heartWithText) {
+      if (isRunning && _romanticState == RomanticAnimationState.heartAnimation) {
         _startHeartFadeOut();
       }
     });
   }
-
-
 
   /// 开始心形淡出效果
   void _startHeartFadeOut() {
@@ -346,13 +351,15 @@ class FireworksController extends ChangeNotifier {
     notifyListeners();
   }
 
-    /// 更新爱心动画效果
+  /// 更新爱心动画效果
   void _updateHeartAnimation() {
-    if (_heartBeating && (_romanticState == RomanticAnimationState.heartAnimation || _romanticState == RomanticAnimationState.heartWithText)) {
+    if (_heartBeating &&
+        (_romanticState == RomanticAnimationState.heartAnimation ||
+            _romanticState == RomanticAnimationState.heartWithText)) {
       // 心跳效果：使用正弦波控制缩放
       final time = DateTime.now().millisecondsSinceEpoch / 1000.0;
       _heartScale = 1.0 + 0.3 * sin(time * 3.0); // 3.0 控制心跳频率
-      
+
       // 处理淡出效果
       if (_heartFadingOut) {
         _heartAlpha -= 0.02; // 控制淡出速度
@@ -584,12 +591,10 @@ class _FireworksPageState extends State<FireworksApp> {
 
       case RomanticAnimationState.loveText:
         return _buildLoveTextWidget();
-
-      case RomanticAnimationState.heartAnimation:
-        return _buildHeartWidget();
-        
       case RomanticAnimationState.heartWithText:
         return _buildHeartWithTextWidget();
+      case RomanticAnimationState.heartAnimation:
+        return _buildHeartWidget();
     }
   }
 
@@ -806,7 +811,7 @@ class _FireworksPageState extends State<FireworksApp> {
                 alpha: _fireworksController.heartAlpha,
               ),
             ),
-            
+
             // 叠加在心形上的文字
             if (_fireworksController.displayedText.isNotEmpty)
               Column(
@@ -846,7 +851,7 @@ class _FireworksPageState extends State<FireworksApp> {
                       ),
                     ),
                   ),
-                  
+
                   // 文字完成后显示小心形
                   if (_fireworksController.displayedText == '我喜欢你') ...[
                     const SizedBox(height: 15),
@@ -954,9 +959,8 @@ class _FireworksPageState extends State<FireworksApp> {
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.refresh),
                                 SizedBox(width: 8),
-                                Text('💕 重新开始'),
+                                Text('💕千万别点💕'),
                               ],
                             ),
                           ),
