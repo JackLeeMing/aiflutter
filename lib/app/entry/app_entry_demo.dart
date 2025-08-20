@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:aiflutter/widgets/window.dart';
+import 'package:aiflutter/router/app_router.dart';
 
 /// 详情页面 - 空白页面用于演示导航
 class DetailPage extends StatelessWidget {
@@ -34,7 +36,7 @@ class DetailPage extends StatelessWidget {
         scrolledUnderElevation: 1,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, size: 20),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.goBack(),
         ),
       ),
       body: Center(

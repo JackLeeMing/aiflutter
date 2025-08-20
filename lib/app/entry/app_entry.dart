@@ -1,7 +1,10 @@
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:aiflutter/app/entry/app_pages.dart';
 import 'package:aiflutter/router/app_router.dart';
+import 'package:aiflutter/utils/simple_scroll_manager.dart';
 
 /// 应用程序主入口页面 - iOS风格设置界面
 /// 提供类似iOS系统设置的列表界面，包含分组和导航功能
@@ -12,9 +15,14 @@ class AppEntryPage extends StatefulWidget {
   State<AppEntryPage> createState() => _AppEntryPageState();
 }
 
-class _AppEntryPageState extends State<AppEntryPage> {
+class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true; // 保持页面状态
+
   @override
   Widget build(BuildContext context) {
+    super.build(context); // 必须调用，用于 AutomaticKeepAliveClientMixin
+
     return WindowFrameWidget(
       child: Scaffold(
         backgroundColor: Colors.grey[100],
@@ -31,13 +39,18 @@ class _AppEntryPageState extends State<AppEntryPage> {
           scrolledUnderElevation: 1,
           centerTitle: true,
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          itemCount: settingsSections.length,
-          itemBuilder: (context, index) {
-            final section = settingsSections[index];
-            return _buildSection(section);
-          },
+        body: SmartScrollView(
+          pageKey: 'app_entry_list',
+          builder: (controller) => ListView.builder(
+            key: const PageStorageKey<String>('settings_list'),
+            controller: controller,
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            itemCount: settingsSections.length,
+            itemBuilder: (context, index) {
+              final section = settingsSections[index];
+              return _buildSection(section);
+            },
+          ),
         ),
       ),
     );
@@ -171,6 +184,9 @@ class _AppEntryPageState extends State<AppEntryPage> {
 
   /// 处理设置项点击事件
   void _handleItemTap(SettingsItem item) {
+    // 添加触觉反馈
+    HapticFeedback.lightImpact();
+
     // 使用 Go Router 进行导航
     context.goToFeature(item.title);
 

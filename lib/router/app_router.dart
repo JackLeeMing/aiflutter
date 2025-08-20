@@ -39,40 +39,60 @@ class AppRouter {
         },
       ),
 
-      // 功能模块路由组
+      // 爱心烟花功能页
       GoRoute(
-        path: AppRoutes.features,
-        name: AppRoutes.featuresName,
-        builder: (context, state) => const FeaturesPage(),
-        routes: [
-          // 爱心烟花
-          GoRoute(
-            path: 'fireworks',
-            name: AppRoutes.fireworksName,
-            builder: (context, state) => const FireworksFeaturePage(),
-          ),
+        path: AppRoutes.fireworks,
+        name: AppRoutes.fireworksName,
+        builder: (context, state) => const FireworksFeaturePage(),
+      ),
 
-          // 几何布局
-          GoRoute(
-            path: 'geometry',
-            name: AppRoutes.geometryName,
-            builder: (context, state) => const GeometryFeaturePage(),
-          ),
+      // 几何布局功能页
+      GoRoute(
+        path: AppRoutes.geometry,
+        name: AppRoutes.geometryName,
+        builder: (context, state) => const GeometryFeaturePage(),
+      ),
 
-          // 作文灵感
-          GoRoute(
-            path: 'writing',
-            name: AppRoutes.writingName,
-            builder: (context, state) => const WritingFeaturePage(),
-          ),
+      // 作文灵感功能页
+      GoRoute(
+        path: AppRoutes.writing,
+        name: AppRoutes.writingName,
+        builder: (context, state) => const WritingFeaturePage(),
+      ),
 
-          // 口算题
-          GoRoute(
-            path: 'math',
-            name: AppRoutes.mathName,
-            builder: (context, state) => const MathFeaturePage(),
-          ),
-        ],
+      // 口算题功能页
+      GoRoute(
+        path: AppRoutes.math,
+        name: AppRoutes.mathName,
+        builder: (context, state) => const MathFeaturePage(),
+      ),
+
+      // 古诗词功能页
+      GoRoute(
+        path: AppRoutes.poetry,
+        name: AppRoutes.poetryName,
+        builder: (context, state) => const PoetryFeaturePage(),
+      ),
+
+      // 科学实验功能页
+      GoRoute(
+        path: AppRoutes.science,
+        name: AppRoutes.scienceName,
+        builder: (context, state) => const ScienceFeaturePage(),
+      ),
+
+      // 阅读书单功能页
+      GoRoute(
+        path: AppRoutes.reading,
+        name: AppRoutes.readingName,
+        builder: (context, state) => const ReadingFeaturePage(),
+      ),
+
+      // 英语自我介绍功能页
+      GoRoute(
+        path: AppRoutes.english,
+        name: AppRoutes.englishName,
+        builder: (context, state) => const EnglishFeaturePage(),
       ),
     ],
 
@@ -91,20 +111,26 @@ class AppRoutes {
   // 路由路径
   static const String home = '/';
   static const String detail = '/detail';
-  static const String features = '/features';
-  static const String fireworks = '/features/fireworks';
-  static const String geometry = '/features/geometry';
-  static const String writing = '/features/writing';
-  static const String math = '/features/math';
+  static const String fireworks = '/fireworks';
+  static const String geometry = '/geometry';
+  static const String writing = '/writing';
+  static const String math = '/math';
+  static const String poetry = '/poetry';
+  static const String science = '/science';
+  static const String reading = '/reading';
+  static const String english = '/english';
 
   // 路由名称（用于命名导航）
   static const String homeName = 'home';
   static const String detailName = 'detail';
-  static const String featuresName = 'features';
   static const String fireworksName = 'fireworks';
   static const String geometryName = 'geometry';
   static const String writingName = 'writing';
   static const String mathName = 'math';
+  static const String poetryName = 'poetry';
+  static const String scienceName = 'science';
+  static const String readingName = 'reading';
+  static const String englishName = 'english';
 }
 
 /// 路由扩展方法
@@ -134,11 +160,29 @@ extension AppRouterExtension on BuildContext {
       case 'GeometryReader':
         goNamed(AppRoutes.geometryName);
         break;
+      case 'PreferenceKey':
+        goToDetail(title: featureName, subtitle: '偏好设置键值管理');
+        break;
+      case 'Danymic ToolBar':
+        goToDetail(title: featureName, subtitle: '动态工具栏组件');
+        break;
       case '作文灵感':
         goNamed(AppRoutes.writingName);
         break;
       case '口算题':
         goNamed(AppRoutes.mathName);
+        break;
+      case '古诗词':
+        goNamed(AppRoutes.poetryName);
+        break;
+      case '科学实验':
+        goNamed(AppRoutes.scienceName);
+        break;
+      case '阅读书单':
+        goNamed(AppRoutes.readingName);
+        break;
+      case '英语自我介绍':
+        goNamed(AppRoutes.englishName);
         break;
       default:
         goToDetail(title: featureName, subtitle: '功能开发中...');
@@ -147,11 +191,18 @@ extension AppRouterExtension on BuildContext {
 
   /// 返回上一页
   void goBack() {
+    // 检查是否可以弹出页面
     if (canPop()) {
       pop();
     } else {
+      // 如果不能弹出（比如已经在根页面），则导航到主页
       go(AppRoutes.home);
     }
+  }
+
+  /// 安全返回主页
+  void goHome() {
+    go(AppRoutes.home);
   }
 }
 
@@ -211,25 +262,6 @@ class ErrorPage extends StatelessWidget {
   }
 }
 
-/// 功能页面基类
-class FeaturesPage extends StatelessWidget {
-  const FeaturesPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return WindowFrameWidget(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('功能模块'),
-        ),
-        body: const Center(
-          child: Text('功能模块页面'),
-        ),
-      ),
-    );
-  }
-}
-
 /// 具体功能页面示例
 class FireworksFeaturePage extends StatelessWidget {
   const FireworksFeaturePage({super.key});
@@ -240,10 +272,10 @@ class FireworksFeaturePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('爱心+烟花'),
-          // leading: IconButton(
-          //   icon: const Icon(Icons.arrow_back_ios),
-          //   onPressed: () => context.goBack(),
-          // ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => context.goBack(),
+          ),
         ),
         body: const Center(
           child: Column(
@@ -359,6 +391,146 @@ class MathFeaturePage extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text('生成所选年级的口算题和答案'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 古诗词功能页
+class PoetryFeaturePage extends StatelessWidget {
+  const PoetryFeaturePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WindowFrameWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('古诗词'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => context.goBack(),
+          ),
+        ),
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.auto_stories, size: 64, color: Colors.brown),
+              SizedBox(height: 16),
+              Text(
+                '古诗词',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('根据需求生产古诗词背诵单'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 科学实验功能页
+class ScienceFeaturePage extends StatelessWidget {
+  const ScienceFeaturePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WindowFrameWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('科学实验'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => context.goBack(),
+          ),
+        ),
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.science, size: 64, color: Colors.teal),
+              SizedBox(height: 16),
+              Text(
+                '科学实验',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('根据主题生成三个适合所选年龄段的科学实验步骤'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 阅读书单功能页
+class ReadingFeaturePage extends StatelessWidget {
+  const ReadingFeaturePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WindowFrameWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('阅读书单'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => context.goBack(),
+          ),
+        ),
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.library_books, size: 64, color: Colors.indigo),
+              SizedBox(height: 16),
+              Text(
+                '阅读书单',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('根据需求生成对应的阅读书单'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 英语自我介绍功能页
+class EnglishFeaturePage extends StatelessWidget {
+  const EnglishFeaturePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WindowFrameWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('英语自我介绍'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => context.goBack(),
+          ),
+        ),
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.translate, size: 64, color: Colors.blue),
+              SizedBox(height: 16),
+              Text(
+                '英语自我介绍',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('根据需求生成英文版和中文版的自我介绍'),
             ],
           ),
         ),
