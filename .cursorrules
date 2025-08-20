@@ -51,3 +51,5 @@
     - 实现适当的混淆和安全措施。
 
     在整个过程中，始终参考[Flutter官方文档](https://flutter.dev/docs)，确保使用最新的Flutter开发最佳实践。
+
+# 注意 color.withOpacity 已经过时 使用 color.withValues(alpha: x)
