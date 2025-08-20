@@ -29,7 +29,7 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           title: const Text(
-            'AI Flutter',
+            'AI & 爱',
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18,
