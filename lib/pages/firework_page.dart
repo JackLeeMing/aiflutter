@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:aiflutter/router/app_router.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -721,14 +722,14 @@ class FireworksPainter extends CustomPainter {
 // MARK: - 主页面
 
 /// 包含烟花动画和控制按钮的主页面
-class FireworksApp extends StatefulWidget {
-  const FireworksApp({super.key});
+class FireworksPage extends StatefulWidget {
+  const FireworksPage({super.key});
 
   @override
-  State<FireworksApp> createState() => _FireworksPageState();
+  State<FireworksPage> createState() => _FireworksPageState();
 }
 
-class _FireworksPageState extends State<FireworksApp> {
+class _FireworksPageState extends State<FireworksPage> {
   late final FireworksController _fireworksController;
   var isRunning = true;
 
@@ -1094,122 +1095,118 @@ class _FireworksPageState extends State<FireworksApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: PredictiveBackPageTransitionsBuilder(), // NEW
-            TargetPlatform.iOS: FadeThroughPageTransitionsBuilder(), // NEW
-            TargetPlatform.macOS: FadeThroughPageTransitionsBuilder(), // NEW
-            TargetPlatform.windows: FadeThroughPageTransitionsBuilder(), // NEW
-            TargetPlatform.linux: FadeThroughPageTransitionsBuilder(), // NEW
-          },
-        ),
-      ),
-      home: WindowFrameWidget(
-        child: Scaffold(
+    return WindowFrameWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            '爱心+烟花',
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: Colors.black,
-          body: LayoutBuilder(
-            builder: (context, constraints) {
-              final size = Size(constraints.maxWidth, constraints.maxHeight);
-              return Stack(
-                children: [
-                  // CustomPaint 绘制烟花效果
-                  ListenableBuilder(
-                    listenable: _fireworksController,
-                    builder: (context, child) {
-                      return CustomPaint(
-                        size: size,
-                        painter: FireworksPainter(
-                          _fireworksController.fireworks,
-                          _fireworksController.particles,
-                        ),
-                      );
-                    },
-                  ),
-                  // 浪漫动画覆盖层
-                  ListenableBuilder(
-                    listenable: _fireworksController,
-                    builder: (context, child) {
-                      return _buildRomanticAnimation();
-                    },
-                  ),
-                  // 控制按钮
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // 重新开始按钮 - 放在上方
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.pink,
-                              foregroundColor: Colors.white,
-                              elevation: 8,
-                              shadowColor: Colors.pink.withValues(alpha: 0.5),
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            ),
-                            onPressed: () {
-                              _fireworksController.restart();
-                            },
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(width: 8),
-                                Text('💕千万别点💕'),
-                              ],
-                            ),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => context.goBack(),
+          ),
+        ),
+        backgroundColor: Colors.black,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            final size = Size(constraints.maxWidth, constraints.maxHeight);
+            return Stack(
+              children: [
+                // CustomPaint 绘制烟花效果
+                ListenableBuilder(
+                  listenable: _fireworksController,
+                  builder: (context, child) {
+                    return CustomPaint(
+                      size: size,
+                      painter: FireworksPainter(
+                        _fireworksController.fireworks,
+                        _fireworksController.particles,
+                      ),
+                    );
+                  },
+                ),
+                // 浪漫动画覆盖层
+                ListenableBuilder(
+                  listenable: _fireworksController,
+                  builder: (context, child) {
+                    return _buildRomanticAnimation();
+                  },
+                ),
+                // 控制按钮
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // 重新开始按钮 - 放在上方
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.pink,
+                            foregroundColor: Colors.white,
+                            elevation: 8,
+                            shadowColor: Colors.pink.withValues(alpha: 0.5),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                           ),
-                          const SizedBox(height: 16),
-                          // 原有控制按钮 - 放在下方，使用Wrap确保小屏幕兼容性
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 12,
-                            runSpacing: 8,
+                          onPressed: () {
+                            _fireworksController.restart();
+                          },
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  var runState = _fireworksController.toggle();
-                                  setState(() {
-                                    isRunning = runState;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(isRunning ? Icons.pause_circle_filled : Icons.play_arrow),
-                                    SizedBox(width: 5),
-                                    Text(isRunning ? '暂停' : '继续')
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
-                                  foregroundColor: Colors.white,
-                                ),
-                                onPressed: () {
-                                  if (_fireworksController.isRunning) {
-                                    _fireworksController.launchSpectacularBatch(size);
-                                  }
-                                },
-                                child: const Text('💥来波大的'),
-                              ),
+                              SizedBox(width: 8),
+                              Text('💕千万别点💕'),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 16),
+                        // 原有控制按钮 - 放在下方，使用Wrap确保小屏幕兼容性
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 12,
+                          runSpacing: 8,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                var runState = _fireworksController.toggle();
+                                setState(() {
+                                  isRunning = runState;
+                                });
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(isRunning ? Icons.pause_circle_filled : Icons.play_arrow),
+                                  SizedBox(width: 5),
+                                  Text(isRunning ? '暂停' : '继续')
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                if (_fireworksController.isRunning) {
+                                  _fireworksController.launchSpectacularBatch(size);
+                                }
+                              },
+                              child: const Text('💥来波大的'),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

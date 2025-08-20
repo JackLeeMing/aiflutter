@@ -73,9 +73,14 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
       child: MaterialApp.router(
         title: 'AI Flutter',
         debugShowCheckedModeBanner: false,
-
         // 使用 Go Router 配置
         routerConfig: AppRouter.router,
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
+            child: child!,
+          );
+        },
 
         // Material Design 3 主题
         theme: ThemeData(

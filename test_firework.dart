@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'lib/app/mediaKitApp/firework_app.dart';
+import 'lib/pages/firework_page.dart';
 
 void main() {
-  runApp(const FireworksApp());
+  runApp(const FireworksPage());
 }

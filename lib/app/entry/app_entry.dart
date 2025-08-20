@@ -1,3 +1,4 @@
+import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -186,13 +187,11 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
   void _handleItemTap(SettingsItem item) {
     // 添加触觉反馈
     HapticFeedback.lightImpact();
-
-    // 使用 Go Router 进行导航
-    context.goToFeature(item.title);
-
     // 如果有自定义点击事件，也执行它
     if (item.onTap != null) {
       item.onTap!();
+    } else {
+      context.goToFeature(item.title, context);
     }
   }
 }

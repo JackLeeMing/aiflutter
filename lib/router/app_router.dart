@@ -1,8 +1,13 @@
+import 'package:aiflutter/pages/clock/flutter_flip_clock_page.dart';
+import 'package:aiflutter/pages/firework_page.dart';
+import 'package:aiflutter/utils/constant.dart';
+import 'package:aiflutter/utils/transition_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:aiflutter/app/entry/app_entry.dart';
 import 'package:aiflutter/app/entry/app_entry_demo.dart';
 import 'package:aiflutter/widgets/window.dart';
+import 'package:aiflutter/widgets/ios_presentation_styles.dart';
 
 /// 应用路由配置 - 使用 Go Router 实现
 /// 提供类型安全、声明式的路由管理
@@ -11,6 +16,8 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     // 初始路由
     initialLocation: AppRoutes.home,
+    navigatorKey: AppConstant.navigatorKey,
+    observers: [],
 
     // 错误页面
     errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
@@ -21,7 +28,7 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.home,
         name: AppRoutes.homeName,
-        builder: (context, state) => const AppEntryPage(),
+        pageBuilder: (context, state) => transitionResolver(const AppEntryPage()),
       ),
 
       // 详情页路由 - 支持参数传递
@@ -41,58 +48,69 @@ class AppRouter {
 
       // 爱心烟花功能页
       GoRoute(
-        path: AppRoutes.fireworks,
-        name: AppRoutes.fireworksName,
-        builder: (context, state) => const FireworksFeaturePage(),
+        path: AppRoutes.heart,
+        name: AppRoutes.heartName,
+        pageBuilder: (context, state) => transitionResolver(const FireworksFeaturePage()),
       ),
 
       // 几何布局功能页
       GoRoute(
         path: AppRoutes.geometry,
         name: AppRoutes.geometryName,
-        builder: (context, state) => const GeometryFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const GeometryFeaturePage()),
       ),
 
       // 作文灵感功能页
       GoRoute(
         path: AppRoutes.writing,
         name: AppRoutes.writingName,
-        builder: (context, state) => const WritingFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const WritingFeaturePage()),
       ),
 
       // 口算题功能页
       GoRoute(
         path: AppRoutes.math,
         name: AppRoutes.mathName,
-        builder: (context, state) => const MathFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const MathFeaturePage()),
       ),
 
       // 古诗词功能页
       GoRoute(
         path: AppRoutes.poetry,
         name: AppRoutes.poetryName,
-        builder: (context, state) => const PoetryFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const PoetryFeaturePage()),
       ),
 
       // 科学实验功能页
       GoRoute(
         path: AppRoutes.science,
         name: AppRoutes.scienceName,
-        builder: (context, state) => const ScienceFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const ScienceFeaturePage()),
       ),
 
       // 阅读书单功能页
       GoRoute(
         path: AppRoutes.reading,
         name: AppRoutes.readingName,
-        builder: (context, state) => const ReadingFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const ReadingFeaturePage()),
       ),
 
       // 英语自我介绍功能页
       GoRoute(
         path: AppRoutes.english,
         name: AppRoutes.englishName,
-        builder: (context, state) => const EnglishFeaturePage(),
+        pageBuilder: (context, state) => transitionResolver(const EnglishFeaturePage()),
+      ),
+
+      GoRoute(
+        path: AppRoutes.fireworks,
+        name: AppRoutes.fireworksName,
+        pageBuilder: (context, state) => transitionResolver(const FireworksPage()),
+      ),
+      GoRoute(
+        path: AppRoutes.clock,
+        name: AppRoutes.clockName,
+        pageBuilder: (context, state) => transitionResolver(const FlutterFlipClockPage()),
       ),
     ],
 
@@ -112,6 +130,7 @@ class AppRoutes {
   static const String home = '/';
   static const String detail = '/detail';
   static const String fireworks = '/fireworks';
+  static const String heart = '/heart';
   static const String geometry = '/geometry';
   static const String writing = '/writing';
   static const String math = '/math';
@@ -119,11 +138,12 @@ class AppRoutes {
   static const String science = '/science';
   static const String reading = '/reading';
   static const String english = '/english';
-
+  static const String clock = '/clock';
   // 路由名称（用于命名导航）
   static const String homeName = 'home';
   static const String detailName = 'detail';
   static const String fireworksName = 'fireworks';
+  static const String heartName = 'heart';
   static const String geometryName = 'geometry';
   static const String writingName = 'writing';
   static const String mathName = 'math';
@@ -131,6 +151,7 @@ class AppRoutes {
   static const String scienceName = 'science';
   static const String readingName = 'reading';
   static const String englishName = 'english';
+  static const String clockName = 'clock';
 }
 
 /// 路由扩展方法
@@ -152,13 +173,20 @@ extension AppRouterExtension on BuildContext {
   }
 
   /// 跳转到功能页面
-  void goToFeature(String featureName) {
+  /// 使用 push 导航保持原页面状态
+  void goToFeature(String featureName, BuildContext context) {
     switch (featureName) {
       case '爱心+烟花':
-        goNamed(AppRoutes.fireworksName);
+        push(AppRoutes.fireworks);
+        break;
+      case '爱心':
+        push(AppRoutes.heart);
+        break;
+      case '翻页时钟':
+        push(AppRoutes.clock);
         break;
       case 'GeometryReader':
-        goNamed(AppRoutes.geometryName);
+        push(AppRoutes.geometry);
         break;
       case 'PreferenceKey':
         goToDetail(title: featureName, subtitle: '偏好设置键值管理');
@@ -166,23 +194,31 @@ extension AppRouterExtension on BuildContext {
       case 'Danymic ToolBar':
         goToDetail(title: featureName, subtitle: '动态工具栏组件');
         break;
+      case 'FullScreen Cover':
+        // 不使用路由，直接调用展示方法
+        _showFullScreenCover(context);
+        break;
+      case 'Sheet Modal':
+        // 不使用路由，直接调用展示方法
+        _showSheet(context);
+        break;
       case '作文灵感':
-        goNamed(AppRoutes.writingName);
+        push(AppRoutes.writing);
         break;
       case '口算题':
-        goNamed(AppRoutes.mathName);
+        push(AppRoutes.math);
         break;
       case '古诗词':
-        goNamed(AppRoutes.poetryName);
+        push(AppRoutes.poetry);
         break;
       case '科学实验':
-        goNamed(AppRoutes.scienceName);
+        push(AppRoutes.science);
         break;
       case '阅读书单':
-        goNamed(AppRoutes.readingName);
+        push(AppRoutes.reading);
         break;
       case '英语自我介绍':
-        goNamed(AppRoutes.englishName);
+        push(AppRoutes.english);
         break;
       default:
         goToDetail(title: featureName, subtitle: '功能开发中...');
@@ -204,6 +240,15 @@ extension AppRouterExtension on BuildContext {
   void goHome() {
     go(AppRoutes.home);
   }
+}
+
+/// iOS展示样式的辅助方法
+void _showFullScreenCover(BuildContext context) {
+  IOSFullScreenCover.show(context);
+}
+
+void _showSheet(BuildContext context) {
+  IOSSheet.show(context);
 }
 
 /// 错误页面
