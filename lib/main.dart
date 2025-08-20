@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:aiflutter/app/mediaKitApp/firework_app.dart';
+// import 'package:aiflutter/app/mediaKitApp/firework_app.dart';
+import 'package:aiflutter/app/mediaKitApp/digit_clock_app.dart';
 import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/utils/package_info.dart';
 import 'package:aiflutter/utils/platform.dart';
@@ -24,15 +25,15 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     Phoenix(
-      child: const FireworksApp(),
+      child: const DigitClockApp(),
     ),
   );
   // 设置窗口大小（仅限桌面平台）
   if (PlatformTool.isDesktop()) {
     doWhenWindowReady(() {
-      const initialSize = Size(600, 800);
+      const initialSize = Size(520, 520);
       appWindow.minSize = initialSize;
-      appWindow.maxSize = Size(800, 800);
+      appWindow.maxSize = Size(800, 520);
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;
       appWindow.title = "AI Flutter";

@@ -25,22 +25,22 @@ class WindowFrameWidget extends StatelessWidget {
           color: backgroundColor,
           gradient: const LinearGradient(
             colors: [
-              Color(0xFFF5A724), // #F5A724
-              Color(0xFFF6CF51), // #F
-              Color(0x80FF0000), // #F
-              Color(0xFFF6CF51), // #F6CF51
-              Color(0xFFF5A724), // #F5A724
+              Color.fromARGB(255, 141, 51, 245), // #F5A724
+              Color.fromARGB(255, 86, 46, 244), // #F
+              Color.fromARGB(128, 89, 18, 233), // #F
+              Color.fromARGB(255, 80, 31, 241), // #F6CF51
+              Color.fromARGB(255, 115, 9, 243), // #F5A724
             ],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
-            color: Color(0xFFF6CF51),
+            color: Color.fromARGB(0, 226, 144, 3),
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFF5A724).withValues(alpha: 0.3),
+              color: const Color.fromARGB(0, 214, 137, 4).withValues(alpha: 0.3),
               spreadRadius: 1,
               blurRadius: 4,
               offset: const Offset(0, 2),

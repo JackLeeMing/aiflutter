@@ -38,6 +38,171 @@ enum RomanticAnimationState {
   heartWithText, // 心形上显示文字的组合效果
 }
 
+// MARK: - 翻页数字Widget
+/// 翻页数字效果Widget，模拟翻页时钟
+class FlipClockDigit extends StatefulWidget {
+  final int currentValue;
+  final int? previousValue;
+  final Duration animationDuration;
+
+  const FlipClockDigit({
+    super.key,
+    required this.currentValue,
+    this.previousValue,
+    this.animationDuration = const Duration(milliseconds: 600),
+  });
+
+  @override
+  State<FlipClockDigit> createState() => _FlipClockDigitState();
+}
+
+class _FlipClockDigitState extends State<FlipClockDigit> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300), // 更快的动画
+      vsync: this,
+    );
+
+    _slideAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutBack,
+    ));
+  }
+
+  @override
+  void didUpdateWidget(FlipClockDigit oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentValue != widget.currentValue) {
+      _controller.forward(from: 0.0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 160,
+      height: 200,
+      child: Stack(
+        children: [
+          // 总是显示当前数字作为底层
+          _buildDigitCard(widget.currentValue),
+
+          // 动画层：只在数字变化时显示
+          if (_controller.isAnimating)
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Stack(
+                  children: [
+                    // 上一个数字（淡出+缩小）
+                    if (widget.previousValue != null)
+                      Transform.scale(
+                        scale: 1.0 - _controller.value * 0.2,
+                        child: Opacity(
+                          opacity: 1.0 - _controller.value,
+                          child: _buildDigitCard(widget.previousValue!),
+                        ),
+                      ),
+
+                    // 当前数字（滑入+放大）
+                    Transform.translate(
+                      offset: Offset(0, (1 - _slideAnimation.value) * 30),
+                      child: Transform.scale(
+                        scale: 0.7 + (_slideAnimation.value * 0.3),
+                        child: Opacity(
+                          opacity: _slideAnimation.value,
+                          child: _buildDigitCard(widget.currentValue),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+
+          // 中间分割线
+          Positioned(
+            top: 99,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 1,
+              color: Colors.black.withValues(alpha: 0.2),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建数字卡片 - 简化版本提升性能
+  Widget _buildDigitCard(int value) {
+    return Container(
+      width: 160,
+      height: 200,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF2A2A2A),
+            Color(0xFF1A1A1A),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.15),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          '$value',
+          style: const TextStyle(
+            fontSize: 90,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+            letterSpacing: -2,
+            shadows: [
+              Shadow(
+                blurRadius: 8.0,
+                color: Colors.blue,
+                offset: Offset(0, 0),
+              ),
+              Shadow(
+                blurRadius: 12.0,
+                color: Colors.purple,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // MARK: - 烟花控制器
 /// 控制器类，管理烟花和粒子的物理效果及生命周期
 class FireworksController extends ChangeNotifier {
@@ -53,6 +218,7 @@ class FireworksController extends ChangeNotifier {
   // 浪漫动画相关状态
   RomanticAnimationState _romanticState = RomanticAnimationState.initial;
   int _countdownValue = 10;
+  int _previousCountdownValue = 11; // 新增：跟踪上一个倒计时值
   double _heartScale = 1.0;
   double _heartAlpha = 1.0;
   bool _heartBeating = false;
@@ -79,6 +245,7 @@ class FireworksController extends ChangeNotifier {
   // 浪漫动画状态getter
   RomanticAnimationState get romanticState => _romanticState;
   int get countdownValue => _countdownValue;
+  int get previousCountdownValue => _previousCountdownValue; // 新增getter
   double get heartScale => _heartScale;
   double get heartAlpha => _heartAlpha;
   bool get animationCompleted => _animationCompleted;
@@ -93,6 +260,7 @@ class FireworksController extends ChangeNotifier {
     isRunning = true;
     _romanticState = RomanticAnimationState.initial;
     _countdownValue = 10;
+    _previousCountdownValue = 11; // 重置上一个值
     _heartScale = 1.0;
     _heartAlpha = 1.0;
     _heartBeating = false;
@@ -282,11 +450,13 @@ class FireworksController extends ChangeNotifier {
   void _startCountdown() {
     _romanticState = RomanticAnimationState.countdown;
     _countdownValue = 10;
+    _previousCountdownValue = 11;
     notifyListeners();
 
     // 每秒更新倒计时
     _romanticTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (isRunning && _countdownValue > 0) {
+        _previousCountdownValue = _countdownValue; // 保存当前值作为上一个值
         _countdownValue--;
         notifyListeners();
       } else {
@@ -601,40 +771,71 @@ class _FireworksPageState extends State<FireworksApp> {
   /// 构建倒计时Widget
   Widget _buildCountdownWidget() {
     return Center(
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        child: Container(
-          key: ValueKey(_fireworksController.countdownValue),
-          width: 200, // 固定宽度
-          height: 200, // 固定高度
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.7),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
-          ),
-          child: Center(
-            child: Text(
-              '${_fireworksController.countdownValue}',
-              style: const TextStyle(
-                fontSize: 120,
-                fontWeight: FontWeight.bold,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 标题文字
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.8),
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1),
+            ),
+            child: const Text(
+              '浪漫倒计时',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
                 color: Colors.white,
+                letterSpacing: 2,
                 shadows: [
                   Shadow(
-                    blurRadius: 20.0,
-                    color: Colors.blue,
-                    offset: Offset(0, 0),
-                  ),
-                  Shadow(
-                    blurRadius: 40.0,
-                    color: Colors.purple,
+                    blurRadius: 10.0,
+                    color: Colors.pink,
                     offset: Offset(0, 0),
                   ),
                 ],
               ),
             ),
           ),
-        ),
+
+          const SizedBox(height: 30),
+
+          // 翻页数字
+          FlipClockDigit(
+            key: ValueKey('countdown_${_fireworksController.countdownValue}'),
+            currentValue: _fireworksController.countdownValue,
+            previousValue: _fireworksController.previousCountdownValue,
+          ),
+
+          const SizedBox(height: 20),
+
+          // 底部提示文字
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Text(
+              '准备好了吗？',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1,
+                shadows: [
+                  Shadow(
+                    blurRadius: 8.0,
+                    color: Colors.blue,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
