@@ -1,6 +1,7 @@
-import 'package:aiflutter/app/entry/app_entry_demo.dart';
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
-import './app_pages.dart';
+import 'package:aiflutter/app/entry/app_pages.dart';
+import 'package:aiflutter/router/app_router.dart';
 
 /// 应用程序主入口页面 - iOS风格设置界面
 /// 提供类似iOS系统设置的列表界面，包含分组和导航功能
@@ -14,28 +15,30 @@ class AppEntryPage extends StatefulWidget {
 class _AppEntryPageState extends State<AppEntryPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text(
-          'AI Flutter',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
+    return WindowFrameWidget(
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: const Text(
+            'AI Flutter',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
           ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          scrolledUnderElevation: 1,
+          centerTitle: true,
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 1,
-        centerTitle: true,
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        itemCount: settingsSections.length,
-        itemBuilder: (context, index) {
-          final section = settingsSections[index];
-          return _buildSection(section);
-        },
+        body: ListView.builder(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          itemCount: settingsSections.length,
+          itemBuilder: (context, index) {
+            final section = settingsSections[index];
+            return _buildSection(section);
+          },
+        ),
       ),
     );
   }
@@ -79,7 +82,6 @@ class _AppEntryPageState extends State<AppEntryPage> {
                 final index = entry.key;
                 final item = entry.value;
                 final isLast = index == section.items.length - 1;
-
                 return _buildSettingsItem(item, isLast);
               }).toList(),
             ),
@@ -169,17 +171,8 @@ class _AppEntryPageState extends State<AppEntryPage> {
 
   /// 处理设置项点击事件
   void _handleItemTap(SettingsItem item) {
-    // 导航到对应的页面
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DetailPage(
-          title: item.title,
-          subtitle: item.subtitle,
-          icon: item.icon,
-          iconColor: item.iconColor,
-        ),
-      ),
-    );
+    // 使用 Go Router 进行导航
+    context.goToFeature(item.title);
 
     // 如果有自定义点击事件，也执行它
     if (item.onTap != null) {

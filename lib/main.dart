@@ -7,7 +7,6 @@ import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/utils/package_info.dart';
 import 'package:aiflutter/utils/platform.dart';
 import 'package:aiflutter/utils/util.dart';
-import 'package:aiflutter/widgets/window.dart';
 import 'package:animations/animations.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:toastification/toastification.dart';
-import 'package:aiflutter/app/entry/app_entry.dart';
+import 'package:aiflutter/router/app_router.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -71,27 +70,70 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
   @override
   Widget build(BuildContext context) {
     return ToastificationWrapper(
-      child: MaterialApp(
-        title: 'TestApp',
+      child: MaterialApp.router(
+        title: 'AI Flutter',
         debugShowCheckedModeBanner: false,
+
+        // 使用 Go Router 配置
+        routerConfig: AppRouter.router,
+
+        // Material Design 3 主题
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
-          pageTransitionsTheme: PageTransitionsTheme(
+
+          // 现代化的 AppBar 样式
+          appBarTheme: const AppBarTheme(
+            centerTitle: true,
+            elevation: 0,
+            scrolledUnderElevation: 1,
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+          ),
+
+          // 页面转场动画
+          pageTransitionsTheme: const PageTransitionsTheme(
             builders: {
-              // TargetPlatform.android: PredictiveBackPageTransitionsBuilder(), // NEW
-              //  TargetPlatform.iOS: FadeThroughPageTransitionsBuilder(), // NEW
-              TargetPlatform.macOS: FadeThroughPageTransitionsBuilder(), // NEW
-              TargetPlatform.windows: FadeThroughPageTransitionsBuilder(), // NEW
-              TargetPlatform.linux: FadeThroughPageTransitionsBuilder(), // NEW
               TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
               TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+              TargetPlatform.macOS: FadeThroughPageTransitionsBuilder(),
+              TargetPlatform.windows: FadeThroughPageTransitionsBuilder(),
+              TargetPlatform.linux: FadeThroughPageTransitionsBuilder(),
             },
           ),
+
+          // 卡片样式
+          cardTheme: CardTheme(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+
+          // 按钮样式
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 12,
+              ),
+            ),
+          ),
         ),
-        home: WindowFrameWidget(
-          child: AppEntryPage(),
+
+        // 深色主题
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
         ),
+
+        // 主题模式
+        themeMode: ThemeMode.system,
       ),
     );
   }
