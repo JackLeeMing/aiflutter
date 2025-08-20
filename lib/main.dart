@@ -86,13 +86,19 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
-
           // 现代化的 AppBar 样式
           appBarTheme: const AppBarTheme(
             centerTitle: true,
-            elevation: 0,
-            scrolledUnderElevation: 1,
             systemOverlayStyle: SystemUiOverlayStyle.dark,
+            // systemOverlayStyle: SystemUiOverlayStyle.light,
+            backgroundColor: Colors.transparent,
+            scrolledUnderElevation: 0,
+            elevation: 0,
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
 
           // 页面转场动画

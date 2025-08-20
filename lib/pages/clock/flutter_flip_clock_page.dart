@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:aiflutter/router/app_router.dart';
@@ -34,6 +35,19 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
 
   @override
   void initState() {
+    if (Platform.isIOS || Platform.isAndroid) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Color.fromARGB(255, 86, 46, 244), // 透明状态栏
+        statusBarIconBrightness: Brightness.light, // Android
+        statusBarBrightness: Brightness.light, // iOS
+      ),
+    );
     WidgetsBinding.instance.addObserver(this);
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
@@ -59,6 +73,18 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
         }
       }
     });
+  }
+
+  void goBack() {
+    context.goBack();
+    if (Platform.isIOS || Platform.isAndroid) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
   }
 
   @override
@@ -91,113 +117,100 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
     final weeks = ['一', '二', '三', '四', '五', '六', '日'];
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            '翻页时钟',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Color.fromARGB(255, 61, 37, 158),
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => context.goBack(),
-          ),
-        ),
-        body: SafeArea(
-          child: Container(
-            color: Color.fromARGB(255, 86, 46, 244),
-            width: double.infinity,
-            height: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 32),
-                // 日期信息行，响应式布局
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: isTablet ? 20.0 : 10.0),
-                  child: isLandscape && !isTablet
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _buildDateText('星期${weeks[_week - 1]}', fontSize * 0.35),
-                            _buildDateText('$_year年$_month月$_day日', fontSize * 0.35),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            _buildDateText('星期${weeks[_week - 1]}', fontSize * 0.4),
-                            SizedBox(height: 8),
-                            _buildDateText('$_year年$_month月$_day日', fontSize * 0.4),
-                          ],
-                        ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        extendBodyBehindAppBar: true,
+        body: Container(
+          color: Color.fromARGB(255, 86, 46, 244),
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 50),
+              // 日期信息行，响应式布局
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: isTablet ? 20.0 : 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _FlipPanel.stream(
-                      initValue: DateTime.now().hour,
-                      itemStream: _hour.stream,
-                      itemBuilder: (context, v) => Container(
-                        alignment: Alignment.center,
-                        width: weight,
-                        height: weight,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(41, 41, 41, 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                        ),
-                        child: Text(
-                          fixed(v),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: Colors.white),
-                        ),
-                      ),
-                      spacing: spacing * 0.3,
-                    ),
-                    SizedBox(width: spacing),
-                    _FlipPanel.stream(
-                      initValue: DateTime.now().minute,
-                      itemStream: _minute.stream,
-                      itemBuilder: (context, v) => Container(
-                        alignment: Alignment.center,
-                        width: weight,
-                        height: weight,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(41, 41, 41, 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                        ),
-                        child: Text(
-                          fixed(v),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: Colors.white),
-                        ),
-                      ),
-                      spacing: spacing * 0.3,
-                    ),
-                    SizedBox(width: spacing),
-                    _FlipPanel.stream(
-                      initValue: DateTime.now().second,
-                      itemStream: _second.stream,
-                      itemBuilder: (context, v) => Container(
-                        alignment: Alignment.center,
-                        width: weight,
-                        height: weight,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(41, 41, 41, 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                        ),
-                        child: Text(
-                          fixed(v),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: Colors.white),
-                        ),
-                      ),
-                      spacing: spacing * 0.3,
-                    ),
+                    _buildDateText('星期${weeks[_week - 1]}', fontSize * 0.55),
+                    _buildDateText('$_year年$_month月$_day日', fontSize * 0.35),
                   ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _FlipPanel.stream(
+                    initValue: DateTime.now().hour,
+                    itemStream: _hour.stream,
+                    itemBuilder: (context, v) => Container(
+                      alignment: Alignment.center,
+                      width: weight,
+                      height: weight,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(41, 41, 41, 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      ),
+                      child: Text(
+                        fixed(v),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: Colors.white),
+                      ),
+                    ),
+                    spacing: spacing * 0.3,
+                  ),
+                  SizedBox(width: spacing),
+                  _FlipPanel.stream(
+                    initValue: DateTime.now().minute,
+                    itemStream: _minute.stream,
+                    itemBuilder: (context, v) => Container(
+                      alignment: Alignment.center,
+                      width: weight,
+                      height: weight,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(41, 41, 41, 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      ),
+                      child: Text(
+                        fixed(v),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: Colors.white),
+                      ),
+                    ),
+                    spacing: spacing * 0.3,
+                  ),
+                  SizedBox(width: spacing),
+                  _FlipPanel.stream(
+                    initValue: DateTime.now().second,
+                    itemStream: _second.stream,
+                    itemBuilder: (context, v) => Container(
+                      alignment: Alignment.center,
+                      width: weight,
+                      height: weight,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(41, 41, 41, 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      ),
+                      child: Text(
+                        fixed(v),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize, color: Colors.white),
+                      ),
+                    ),
+                    spacing: spacing * 0.3,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => goBack(),
+            tooltip: '返回',
+            mini: true,
+            shape: CircleBorder(),
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.yellow,
+            child: const Icon(Icons.arrow_back_sharp, color: Colors.white)),
       ),
     );
   }
@@ -246,6 +259,14 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
   void dispose() {
     // TODO: implement dispose
     WidgetsBinding.instance.removeObserver(this);
+    if (Platform.isIOS || Platform.isAndroid) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
     super.dispose();
   }
 }
