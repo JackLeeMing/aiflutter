@@ -1,7 +1,6 @@
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/pages/animated_text_kit_page.dart';
 import 'package:aiflutter/pages/box_transform_app.dart';
-import 'package:aiflutter/pages/camerawesome_page.dart';
 import 'package:aiflutter/pages/countdown_timer_page.dart';
 import 'package:aiflutter/pages/dismiss_view_page.dart';
 import 'package:aiflutter/pages/flutter_liquid_swipe_page.dart';
@@ -12,16 +11,9 @@ import 'package:aiflutter/pages/tab_base_page.dart';
 import 'package:aiflutter/utils/colors.dart';
 import 'package:aiflutter/utils/icons.dart';
 import 'package:aiflutter/utils/transition_resolver.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 final otherRoutes = [
-  GoRoute(
-    path: '/t1',
-    name: "AnimatedTextKitPage",
-    pageBuilder: (context, state) => transitionResolver(const AnimatedTextKitPage()),
-  ),
   GoRoute(
     path: '/t2',
     name: "BoxTransformPage",
@@ -29,8 +21,8 @@ final otherRoutes = [
   ), //
   GoRoute(
     path: '/t3',
-    name: "AwesomeCamera",
-    pageBuilder: (context, state) => transitionResolver(const CameraAwesomePage()),
+    name: "AnimatedTextKitPage",
+    pageBuilder: (context, state) => transitionResolver(const AnimatedTextKitPage()),
   ),
   GoRoute(
     path: '/t4',
@@ -45,7 +37,7 @@ final otherRoutes = [
   GoRoute(
     path: '/t6',
     name: "FlutterLiquidAwipePage",
-    pageBuilder: (context, state) => transitionResolver(const FlutterLiquidAwipePage()),
+    pageBuilder: (context, state) => transitionResolver(const FlutterLiquidPage()),
   ), //
   GoRoute(
     path: '/t7',
@@ -72,14 +64,14 @@ final otherRoutes = [
 SettingsSection buildOtherSection(String title) {
   List<SettingsItem> items = List.generate(otherRoutes.length, (int index) {
     final route = otherRoutes[index];
-    final isCamera = route.name == 'AwesomeCamera';
     return SettingsItem(
-      icon: isCamera ? FontAwesomeIcons.camera : randomAwesomeIcon(),
-      iconColor: isCamera ? Colors.brown : randomColor(),
-      title: isCamera ? '相机' : route.name!,
-      subtitle: isCamera ? '系统相机调用' : '#${index + 1}',
+      icon: randomAwesomeIcon(),
+      iconColor: randomColor(),
+      title: route.name!,
+      subtitle: '功能衍生#${index + 1}',
       hasArrow: true,
       path: route.path,
+      isCamera: false,
     );
     // checkCameraPermission
   });

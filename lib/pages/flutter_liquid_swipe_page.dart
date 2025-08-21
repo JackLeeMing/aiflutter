@@ -2,14 +2,14 @@ import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_liquid_swipe/flutter_liquid_swipe.dart';
 
-class FlutterLiquidAwipePage extends StatefulWidget {
-  const FlutterLiquidAwipePage({super.key});
+class FlutterLiquidPage extends StatefulWidget {
+  const FlutterLiquidPage({super.key});
 
   @override
-  State<FlutterLiquidAwipePage> createState() => _LiquidSwipeOnboardingState();
+  State<FlutterLiquidPage> createState() => _LiquidSwipeOnboardingState();
 }
 
-class _LiquidSwipeOnboardingState extends State<FlutterLiquidAwipePage> {
+class _LiquidSwipeOnboardingState extends State<FlutterLiquidPage> {
   final _key = GlobalKey<LiquidSwipeState>();
 
   LiquidSwipeState? get liquidSwipeController => _key.currentState;

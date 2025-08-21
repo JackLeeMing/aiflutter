@@ -3,6 +3,7 @@ import 'package:aiflutter/app/app_entry_demo.dart';
 import 'package:aiflutter/pages/aniation_test_page.dart';
 import 'package:aiflutter/pages/ball_animation_page.dart';
 import 'package:aiflutter/pages/batch_pages.dart';
+import 'package:aiflutter/pages/camerawesome_page.dart';
 import 'package:aiflutter/pages/drag_sort_page.dart';
 import 'package:aiflutter/pages/firework_page.dart';
 import 'package:aiflutter/pages/flutter_flip_clock_page.dart';
@@ -40,7 +41,11 @@ class AppRouter {
         name: AppRoutes.homeName,
         pageBuilder: (context, state) => transitionResolver(const AppEntryPage()),
       ),
-
+      GoRoute(
+        path: AppRoutes.awesomeCamera,
+        name: "CameraAwesomePage",
+        pageBuilder: (context, state) => transitionResolver(const CameraAwesomePage()),
+      ),
       // 详情页路由 - 支持参数传递
       GoRoute(
         path: AppRoutes.detail,

@@ -79,14 +79,14 @@ final _love = SettingsSection(
   items: [
     SettingsItem(
       icon: FontAwesomeIcons.bomb,
-      iconColor: Colors.red,
+      iconColor: Colors.purpleAccent,
       title: '爱心+烟花',
       subtitle: '浪漫动画效果展示',
       hasArrow: true,
     ),
     SettingsItem(
       icon: FontAwesomeIcons.heart,
-      iconColor: Colors.red,
+      iconColor: Colors.deepPurple,
       title: '爱心',
       subtitle: '浪漫的爱心',
       hasArrow: true,
@@ -105,15 +105,24 @@ final _model = SettingsSection(
   title: '视图',
   items: [
     SettingsItem(
+      icon: FontAwesomeIcons.camera,
+      iconColor: Colors.deepOrange,
+      title: '系统相机',
+      subtitle: '系统相机调用',
+      hasArrow: true,
+      path: AppRoutes.awesomeCamera,
+      isCamera: true,
+    ),
+    SettingsItem(
       icon: FontAwesomeIcons.expand,
-      iconColor: randomColor(),
+      iconColor: Colors.deepOrangeAccent,
       title: 'FullScreen Cover',
       subtitle: '全屏覆盖展示',
       hasArrow: true,
     ),
     SettingsItem(
       icon: FontAwesomeIcons.rectangleList,
-      iconColor: randomColor(),
+      iconColor: Colors.pinkAccent,
       title: 'Sheet Modal',
       subtitle: 'iOS风格的底部弹出表单',
       hasArrow: true,

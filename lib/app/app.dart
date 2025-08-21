@@ -189,7 +189,7 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
     // 添加触觉反馈
     HapticFeedback.lightImpact();
     // 如果有自定义点击事件，也执行它
-    final isCamera = item.title == '相机';
+    final isCamera = item.isCamera;
     if (isCamera) {
       checkCameraPermission(context, okBack: () {
         _goNextPage(item);

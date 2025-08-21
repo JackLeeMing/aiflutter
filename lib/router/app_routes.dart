@@ -14,6 +14,7 @@ class AppRoutes {
   static const String reading = '/reading';
   static const String english = '/english';
   static const String clock = '/clock';
+  static const String awesomeCamera = '/awesomeCamera';
   //new
   static const String dragSort = '/dragSort';
   static const String singlePic = '/singlePic';

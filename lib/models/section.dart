@@ -20,6 +20,7 @@ class SettingsItem {
   final bool hasArrow;
   final VoidCallback? onTap;
   final String? path;
+  final bool isCamera;
 
   SettingsItem({
     required this.icon,
@@ -27,6 +28,7 @@ class SettingsItem {
     required this.title,
     this.subtitle = '',
     this.hasArrow = true,
+    this.isCamera = false,
     this.onTap,
     this.path,
   });
