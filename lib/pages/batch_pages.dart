@@ -59,35 +59,6 @@ class ErrorPage extends StatelessWidget {
   }
 }
 
-/// 具体功能页面示例
-class FireworksFeaturePage extends StatelessWidget {
-  const FireworksFeaturePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return WindowFrameWidget(
-      child: Scaffold(
-        appBar: AppBar(title: const Text('爱心+烟花')),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.favorite, size: 64, color: Colors.red),
-              SizedBox(height: 16),
-              Text(
-                '爱心烟花效果',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text('浪漫动画效果展示'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class GeometryFeaturePage extends StatelessWidget {
   const GeometryFeaturePage({super.key});
 

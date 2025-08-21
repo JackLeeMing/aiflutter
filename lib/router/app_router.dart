@@ -7,6 +7,7 @@ import 'package:aiflutter/pages/camerawesome_page.dart';
 import 'package:aiflutter/pages/drag_sort_page.dart';
 import 'package:aiflutter/pages/firework_page.dart';
 import 'package:aiflutter/pages/flutter_flip_clock_page.dart';
+import 'package:aiflutter/pages/heart_page.dart';
 import 'package:aiflutter/pages/navigation_comparison_page.dart';
 import 'package:aiflutter/pages/sales_statistics_page.dart';
 import 'package:aiflutter/pages/single_picture_page.dart';
@@ -65,7 +66,7 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.heart,
         name: AppRoutes.heartName,
-        pageBuilder: (context, state) => transitionResolver(const FireworksFeaturePage()),
+        pageBuilder: (context, state) => transitionResolver(const HeartFeaturePage()),
       ),
 
       // 几何布局功能页

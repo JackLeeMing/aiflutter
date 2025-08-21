@@ -5,6 +5,7 @@ import 'package:aiflutter/utils/camera.dart';
 import 'package:aiflutter/utils/simple_scroll_manager.dart';
 import 'package:aiflutter/widgets/dialog.dart';
 import 'package:aiflutter/widgets/window.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -29,12 +30,20 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: const Text(
-            'AI & 爱',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-            ),
+          title: AnimatedTextKit(
+            repeatForever: true,
+            animatedTexts: [
+              ColorizeAnimatedText(
+                'AI & 爱与遇见',
+                textStyle: const TextStyle(fontSize: 22.0),
+                colors: [
+                  Colors.purple,
+                  Colors.blue,
+                  Colors.yellow,
+                  Colors.red,
+                ],
+              ),
+            ],
           ),
           backgroundColor: Colors.white,
           elevation: 0,
