@@ -1,4 +1,3 @@
-import 'package:aiflutter/router/context_extension.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 
@@ -23,20 +22,7 @@ class DetailPage extends StatelessWidget {
         child: Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20),
-          onPressed: () => context.goBack(),
-        ),
+        title: Text(title),
       ),
       body: Center(
         child: Column(

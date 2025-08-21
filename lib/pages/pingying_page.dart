@@ -1,38 +1,24 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 // import 'package:lpinyin/lpinyin.dart';
 import 'package:pinyin/pinyin.dart';
 import 'package:ruby_text/ruby_text.dart';
 // import '../pages/sales_statistics_page.dart';
 
-class PingYingApp extends StatelessWidget {
-  const PingYingApp({super.key});
+class PingYingPage extends StatefulWidget {
+  const PingYingPage({super.key});
 
   @override
+  State<PingYingPage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<PingYingPage> {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '销售统计',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        brightness: Brightness.light,
-      ),
-      home: const HomePage(),
-    );
+    return WindowFrameWidget(child: buildC(context));
   }
-}
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget buildC(BuildContext context) {
     String text = "天府广场";
     String pinyin = PinyinHelper.getShortPinyin(text);
     String pinyin1 = PinyinHelper.getPinyin(text);

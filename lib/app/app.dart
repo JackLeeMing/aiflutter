@@ -1,9 +1,13 @@
 import 'package:aiflutter/app/app_pages.dart';
+import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/router/context_extension.dart';
+import 'package:aiflutter/utils/camera.dart';
 import 'package:aiflutter/utils/simple_scroll_manager.dart';
+import 'package:aiflutter/widgets/dialog.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 /// 应用程序主入口页面 - iOS风格设置界面
 /// 提供类似iOS系统设置的列表界面，包含分组和导航功能
@@ -21,7 +25,6 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context); // 必须调用，用于 AutomaticKeepAliveClientMixin
-    final settingsSections = buildSettingsSections(context);
     return WindowFrameWidget(
       child: Scaffold(
         backgroundColor: Colors.grey[100],
@@ -186,10 +189,28 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
     // 添加触觉反馈
     HapticFeedback.lightImpact();
     // 如果有自定义点击事件，也执行它
+    final isCamera = item.title == '相机';
+    if (isCamera) {
+      checkCameraPermission(context, okBack: () {
+        _goNextPage(item);
+      }, failBack: () {
+        showTDWarningMessage(context, "无法调用系统相机!");
+      });
+    } else {
+      showTDSuccessMessage(context, "正常调用系统相机!");
+      _goNextPage(item);
+    }
+  }
+
+  void _goNextPage(SettingsItem item) {
     if (item.onTap != null) {
       item.onTap!();
     } else {
-      context.goToFeature(item.title, context);
+      if (item.path != null && item.path != "") {
+        context.push(item.path!);
+      } else {
+        context.goToFeature(item.title, context);
+      }
     }
   }
 }

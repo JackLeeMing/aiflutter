@@ -1,34 +1,15 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_box_transform/flutter_box_transform.dart';
 
-class BoxTransformApp extends StatelessWidget {
-  const BoxTransformApp({super.key});
+class BoxTransformPage extends StatefulWidget {
+  const BoxTransformPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Box Transform Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
-  }
+  State<BoxTransformPage> createState() => _MyHomePageState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<BoxTransformPage> {
   late Rect rect = Rect.fromCenter(
     center: MediaQuery.of(context).size.center(Offset.zero),
     width: 200,
@@ -37,7 +18,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("BoxTransform"),
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [

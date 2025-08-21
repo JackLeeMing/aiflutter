@@ -1,39 +1,11 @@
+import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/router/app_routes.dart';
+import 'package:aiflutter/router/routes.dart';
+import 'package:aiflutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 
-/// 设置分组数据模型
-class SettingsSection {
-  final String title;
-  final List<SettingsItem> items;
-
-  SettingsSection({
-    required this.title,
-    required this.items,
-  });
-}
-
-/// 设置项数据模型
-class SettingsItem {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final bool hasArrow;
-  final VoidCallback? onTap;
-
-  SettingsItem({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    this.subtitle = '',
-    this.hasArrow = true,
-    this.onTap,
-  });
-}
-
-final SettingsSection listSectioin = SettingsSection(
+final SettingsSection _listSection = SettingsSection(
   title: '从列表中切换',
   items: [
     SettingsItem(
@@ -101,128 +73,120 @@ final SettingsSection listSectioin = SettingsSection(
     ),
   ],
 );
-List<SettingsSection> buildSettingsSections(BuildContext context) {
-  return [
-    SettingsSection(
-      title: '爱的魔法',
-      items: [
-        SettingsItem(
-          icon: FontAwesomeIcons.bomb,
-          iconColor: Colors.red,
-          title: '爱心+烟花',
-          subtitle: '浪漫动画效果展示',
-          hasArrow: true,
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.heart,
-          iconColor: Colors.red,
-          title: '爱心',
-          subtitle: '浪漫的爱心',
-          hasArrow: true,
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.clock,
-          iconColor: Colors.purple,
-          title: '翻页时钟',
-          subtitle: '翻页时钟',
-          hasArrow: true,
-        ),
-      ],
+
+final _love = SettingsSection(
+  title: '爱的魔法',
+  items: [
+    SettingsItem(
+      icon: FontAwesomeIcons.bomb,
+      iconColor: Colors.red,
+      title: '爱心+烟花',
+      subtitle: '浪漫动画效果展示',
+      hasArrow: true,
     ),
-    SettingsSection(
-      title: '视图',
-      items: [
-        SettingsItem(
-          icon: FontAwesomeIcons.expand,
-          iconColor: Colors.cyan,
-          title: 'FullScreen Cover',
-          subtitle: '全屏覆盖展示',
-          hasArrow: true,
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.rectangleList,
-          iconColor: Colors.pink,
-          title: 'Sheet Modal',
-          subtitle: 'iOS风格的底部弹出表单',
-          hasArrow: true,
-        ),
-      ],
+    SettingsItem(
+      icon: FontAwesomeIcons.heart,
+      iconColor: Colors.red,
+      title: '爱心',
+      subtitle: '浪漫的爱心',
+      hasArrow: true,
     ),
-    SettingsSection(
-      title: '繁杂',
-      items: [
-        SettingsItem(
-          icon: FontAwesomeIcons.listOl,
-          iconColor: Colors.deepOrangeAccent,
-          title: 'DragSortPage',
-          subtitle: '拖拽排序',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.dragSort);
-          },
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.solidFileImage,
-          iconColor: Colors.pinkAccent,
-          title: 'SinglePicturePage',
-          subtitle: 'Picture',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.singlePic);
-          },
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.salesforce,
-          iconColor: Colors.orange,
-          title: 'SalesStatisticsPage',
-          subtitle: 'Sales',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.salesStatistics);
-          },
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.airbnb,
-          iconColor: Colors.orangeAccent,
-          title: 'AnimationTestPage',
-          subtitle: 'Animation',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.aniationTest);
-          },
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.baseball,
-          iconColor: Colors.teal,
-          title: 'BallAnimationPage',
-          subtitle: 'Ball',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.ballAnimation);
-          },
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.toriiGate,
-          iconColor: Colors.tealAccent,
-          title: 'ToastnotificationPage',
-          subtitle: 'Toast',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.toastNotification);
-          },
-        ),
-        SettingsItem(
-          icon: FontAwesomeIcons.nairaSign,
-          iconColor: Colors.purpleAccent,
-          title: 'NavigationComparisonPage',
-          subtitle: 'Navi',
-          hasArrow: true,
-          onTap: () {
-            context.push(AppRoutes.navigationComparison);
-          },
-        ),
-      ],
+    SettingsItem(
+      icon: FontAwesomeIcons.clock,
+      iconColor: Colors.purple,
+      title: '翻页时钟',
+      subtitle: '翻页时钟',
+      hasArrow: true,
     ),
-    listSectioin,
-  ];
-}
+  ],
+);
+
+final _model = SettingsSection(
+  title: '视图',
+  items: [
+    SettingsItem(
+      icon: FontAwesomeIcons.expand,
+      iconColor: randomColor(),
+      title: 'FullScreen Cover',
+      subtitle: '全屏覆盖展示',
+      hasArrow: true,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.rectangleList,
+      iconColor: randomColor(),
+      title: 'Sheet Modal',
+      subtitle: 'iOS风格的底部弹出表单',
+      hasArrow: true,
+    ),
+  ],
+);
+
+final _fan = SettingsSection(
+  title: '繁',
+  items: [
+    SettingsItem(
+      icon: FontAwesomeIcons.listOl,
+      iconColor: randomColor(),
+      title: 'DragSortPage',
+      subtitle: '拖拽排序',
+      hasArrow: true,
+      path: AppRoutes.dragSort,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.solidFileImage,
+      iconColor: randomColor(),
+      title: 'SinglePicturePage',
+      subtitle: 'Picture',
+      hasArrow: true,
+      path: AppRoutes.singlePic,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.salesforce,
+      iconColor: randomColor(),
+      title: 'SalesStatisticsPage',
+      subtitle: 'Sales',
+      hasArrow: true,
+      path: AppRoutes.salesStatistics,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.airbnb,
+      iconColor: randomColor(),
+      title: 'AnimationTestPage',
+      subtitle: 'Animation',
+      hasArrow: true,
+      path: AppRoutes.aniationTest,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.baseball,
+      iconColor: randomColor(),
+      title: 'BallAnimationPage',
+      subtitle: 'Ball',
+      hasArrow: true,
+      path: AppRoutes.ballAnimation,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.toriiGate,
+      iconColor: randomColor(),
+      title: 'ToastnotificationPage',
+      subtitle: 'Toast',
+      hasArrow: true,
+      path: AppRoutes.toastNotification,
+    ),
+    SettingsItem(
+      icon: FontAwesomeIcons.nairaSign,
+      iconColor: randomColor(),
+      title: 'NavigationComparisonPage',
+      subtitle: 'Navi',
+      hasArrow: true,
+      path: AppRoutes.navigationComparison,
+    ),
+  ],
+);
+
+final List<SettingsSection> settingsSections = [
+  _love,
+  _model,
+  _fan,
+  buildOtherSection("茂"),
+  _listSection,
+];

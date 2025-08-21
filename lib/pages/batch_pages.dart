@@ -1,5 +1,4 @@
 import 'package:aiflutter/router/app_routes.dart';
-import 'package:aiflutter/router/context_extension.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -68,13 +67,7 @@ class FireworksFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('爱心+烟花'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('爱心+烟花')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,13 +95,7 @@ class GeometryFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('GeometryReader'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('GeometryReader')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -136,13 +123,7 @@ class WritingFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('作文灵感'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('作文灵感')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,13 +151,7 @@ class MathFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('口算题'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('口算题')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -205,13 +180,7 @@ class PoetryFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('古诗词'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('古诗词')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -240,13 +209,7 @@ class ScienceFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('科学实验'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('科学实验')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -275,13 +238,7 @@ class ReadingFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('阅读书单'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('阅读书单')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -310,13 +267,7 @@ class EnglishFeaturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WindowFrameWidget(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('英语自我介绍'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+        appBar: AppBar(title: const Text('英语自我介绍')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

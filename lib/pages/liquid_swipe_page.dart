@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
@@ -15,14 +16,14 @@ class ItemData {
 }
 
 /// Example of LiquidSwipe with itemBuilder
-class WithBuilderApp extends StatefulWidget {
-  const WithBuilderApp({super.key});
+class LiquidSwipePage extends StatefulWidget {
+  const LiquidSwipePage({super.key});
 
   @override
-  State<WithBuilderApp> createState() => _WithBuilder();
+  State<LiquidSwipePage> createState() => _WithBuilder();
 }
 
-class _WithBuilder extends State<WithBuilderApp> {
+class _WithBuilder extends State<LiquidSwipePage> {
   int page = 0;
   late LiquidController liquidController;
   late UpdateType updateType;
@@ -97,6 +98,10 @@ class _WithBuilder extends State<WithBuilderApp> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

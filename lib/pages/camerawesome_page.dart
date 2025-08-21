@@ -1,30 +1,22 @@
 import 'dart:io';
 
+import 'package:aiflutter/utils/file_utils.dart';
+import 'package:aiflutter/widgets/window.dart';
 // import 'package:better_open_file/better_open_file.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/pigeon.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../utils/file_utils.dart';
-
-class CameraAwesomeApp extends StatelessWidget {
-  const CameraAwesomeApp({super.key});
+class CameraAwesomePage extends StatelessWidget {
+  const CameraAwesomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'camerAwesome',
-      home: CameraPage(),
-    );
+    return WindowFrameWidget(child: buildC(context));
   }
-}
 
-class CameraPage extends StatelessWidget {
-  const CameraPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildC(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -73,8 +65,7 @@ class CameraPage extends StatelessWidget {
                 '${extDir.path}/camerawesome',
               ).create(recursive: true);
               if (sensors.length == 1) {
-                final String filePath =
-                    '${testDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+                final String filePath = '${testDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
                 return SingleCaptureRequest(filePath, sensors.first);
               }
               // Separate pictures taken with front and back camera

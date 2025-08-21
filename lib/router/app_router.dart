@@ -13,8 +13,11 @@ import 'package:aiflutter/pages/toast_notification_page.dart';
 import 'package:aiflutter/router/app_routes.dart';
 import 'package:aiflutter/utils/constant.dart';
 import 'package:aiflutter/utils/transition_resolver.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import './routes.dart';
 
 /// 应用路由配置 - 使用 Go Router 实现
 /// 提供类型安全、声明式的路由管理
@@ -24,7 +27,7 @@ class AppRouter {
     // 初始路由
     initialLocation: AppRoutes.home,
     navigatorKey: AppConstant.navigatorKey,
-    observers: [],
+    observers: [BotToastNavigatorObserver()],
 
     // 错误页面
     errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
@@ -162,6 +165,7 @@ class AppRouter {
         name: "NavigationComparisonPage",
         pageBuilder: (context, state) => transitionResolver(const NavigationComparisonPage()),
       ),
+      ...otherRoutes,
     ],
 
     // 路由重定向

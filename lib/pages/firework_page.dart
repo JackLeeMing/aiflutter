@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:aiflutter/router/context_extension.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 
@@ -385,17 +384,13 @@ class _FireworksPageState extends State<FireworksPage> {
     return WindowFrameWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            '爱心+烟花',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.black,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => context.goBack(),
-          ),
-        ),
+            title: const Text(
+              '爱心+烟花',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.black,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.white)),
         backgroundColor: Colors.black,
         body: LayoutBuilder(
           builder: (context, constraints) {

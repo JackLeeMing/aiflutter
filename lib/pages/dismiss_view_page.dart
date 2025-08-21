@@ -1,3 +1,4 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
@@ -5,7 +6,7 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 /// This is a basic usage of DismissiblePage
 /// For more examples check the demo/folder
-class DismissPageApp extends StatelessWidget {
+class DismissViewPage extends StatelessWidget {
   static const images = [
     'assets/images/home_1.png',
     'assets/images/home_2.png',
@@ -14,10 +15,14 @@ class DismissPageApp extends StatelessWidget {
     "assets/images/the_irishman.jpg",
   ];
 
-  const DismissPageApp({super.key});
+  const DismissViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -34,8 +39,9 @@ class DismissPageApp extends StatelessWidget {
         itemCount: images.length,
         loop: true,
         pagination: const SwiperPagination(
-            alignment: Alignment.bottomCenter,
-            builder: TDSwiperPagination.dotsBar),
+          alignment: Alignment.bottomCenter,
+          builder: TDSwiperPagination.dotsBar,
+        ),
         itemBuilder: (BuildContext context, int index) {
           return buildEle(context, images[index % images.length]);
         },

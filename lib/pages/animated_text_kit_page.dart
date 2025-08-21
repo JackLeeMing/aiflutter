@@ -1,34 +1,15 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
-class AnimatedTextKitApp extends StatefulWidget {
-  const AnimatedTextKitApp({super.key});
-
-  /// This widget is the root of your application.
-  @override
-  MyAppState createState() => MyAppState();
-}
-
-class MyAppState extends State<AnimatedTextKitApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Animated Text Kit',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+class AnimatedTextKitPage extends StatefulWidget {
+  const AnimatedTextKitPage({super.key});
 
   @override
-  MyHomePageState createState() => MyHomePageState();
+  State<AnimatedTextKitPage> createState() => MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<AnimatedTextKitPage> {
   late List<AnimatedTextExample> _examples;
   int _index = 0;
   int _tapCount = 0;
@@ -48,6 +29,10 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     final animatedTextExample = _examples[_index];
 
     return Scaffold(
@@ -142,11 +127,7 @@ class AnimatedTextExample {
   final Widget child;
   final AnimatedTextController controller;
 
-  const AnimatedTextExample(
-      {required this.label,
-      required this.color,
-      required this.child,
-      required this.controller});
+  const AnimatedTextExample({required this.label, required this.color, required this.child, required this.controller});
 }
 
 // Colorize Text Style
@@ -284,10 +265,8 @@ List<AnimatedTextExample> animatedTextExamples({VoidCallback? onTap}) {
             animatedTexts: [
               TypewriterAnimatedText('Discipline is the best tool'),
               TypewriterAnimatedText('Design first, then code', cursor: '|'),
-              TypewriterAnimatedText('Do not patch bugs out, rewrite them',
-                  cursor: '<|>'),
-              TypewriterAnimatedText('Do not test bugs out, design them out',
-                  cursor: '💡'),
+              TypewriterAnimatedText('Do not patch bugs out, rewrite them', cursor: '<|>'),
+              TypewriterAnimatedText('Do not test bugs out, design them out', cursor: '💡'),
             ],
             controller: typewriterController,
             onTap: onTap,

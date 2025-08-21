@@ -1,29 +1,14 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 
-class TabBaseApp extends StatelessWidget {
-  const TabBaseApp({super.key});
+class TabBasePage extends StatefulWidget {
+  const TabBasePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter TabBar 示例',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const TabBarExample(),
-    );
-  }
+  State<TabBasePage> createState() => _TabBarExampleState();
 }
 
-class TabBarExample extends StatefulWidget {
-  const TabBarExample({super.key});
-
-  @override
-  State<TabBarExample> createState() => _TabBarExampleState();
-}
-
-class _TabBarExampleState extends State<TabBarExample>
-    with TickerProviderStateMixin {
+class _TabBarExampleState extends State<TabBasePage> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -40,6 +25,10 @@ class _TabBarExampleState extends State<TabBarExample>
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('TabBar 示例'),
@@ -66,8 +55,7 @@ class _TabBarExampleState extends State<TabBarExample>
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('你点击了首页按钮')));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('你点击了首页按钮')));
                   },
                   child: const Text('点击我'),
                 ),
