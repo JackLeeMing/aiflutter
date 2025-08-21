@@ -192,12 +192,12 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
     final isCamera = item.isCamera;
     if (isCamera) {
       checkCameraPermission(context, okBack: () {
+        showTDSuccessMessage(context, "正常调用系统相机!");
         _goNextPage(item);
       }, failBack: () {
         showTDWarningMessage(context, "无法调用系统相机!");
       });
     } else {
-      showTDSuccessMessage(context, "正常调用系统相机!");
       _goNextPage(item);
     }
   }
