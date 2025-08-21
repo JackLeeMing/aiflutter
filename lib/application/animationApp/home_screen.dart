@@ -1,4 +1,4 @@
-import 'package:aiflutter/app/animationApp/question_screen.dart';
+import 'package:aiflutter/application/animationApp/question_screen.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 

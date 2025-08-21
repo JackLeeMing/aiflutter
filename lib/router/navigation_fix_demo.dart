@@ -1,6 +1,5 @@
+import 'package:aiflutter/router/context_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'app_router.dart';
 
 /// 导航修复演示页面
 /// 展示正确的Go Router导航使用方法

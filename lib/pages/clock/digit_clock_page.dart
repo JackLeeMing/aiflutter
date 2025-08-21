@@ -3,13 +3,10 @@ import 'dart:math' as math;
 
 import 'package:aiflutter/utils/system_util.dart';
 import 'package:aiflutter/widgets/window.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'flutter_flip_clock1.dart';
-// import './flutter_flip_animation_4.dart';
-import 'flutter_flip_clock_page.dart';
 
 class DigitClockPage extends StatefulWidget {
   const DigitClockPage({super.key});

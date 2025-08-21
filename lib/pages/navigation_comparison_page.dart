@@ -1,16 +1,17 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// Go Router 导航方式对比演示
 /// 展示 push 与 go/goNamed 的区别
-class NavigationComparisonDemo extends StatefulWidget {
-  const NavigationComparisonDemo({super.key});
+class NavigationComparisonPage extends StatefulWidget {
+  const NavigationComparisonPage({super.key});
 
   @override
-  State<NavigationComparisonDemo> createState() => _NavigationComparisonDemoState();
+  State<NavigationComparisonPage> createState() => _NavigationComparisonDemoState();
 }
 
-class _NavigationComparisonDemoState extends State<NavigationComparisonDemo> {
+class _NavigationComparisonDemoState extends State<NavigationComparisonPage> {
   int _counter = 0;
   final ScrollController _scrollController = ScrollController();
 
@@ -22,6 +23,10 @@ class _NavigationComparisonDemoState extends State<NavigationComparisonDemo> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('导航方式对比'),
@@ -305,6 +310,10 @@ class TestDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('测试页面 ($method)'),

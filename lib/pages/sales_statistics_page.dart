@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:aiflutter/widgets/window.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SalesStatisticsPage extends StatefulWidget {
@@ -14,6 +15,10 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
@@ -46,7 +51,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 spreadRadius: 1,
                 blurRadius: 5,
                 offset: const Offset(1, 0),
@@ -104,9 +109,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: isSelected
-                    ? Colors.blue.withOpacity(0.1)
-                    : Colors.transparent,
+                color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -208,7 +211,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -229,14 +232,9 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                  child: _buildSalesItem(
-                      '营业额', '3213.32', '+12.2%', Colors.green)),
-              Expanded(
-                  child: _buildSalesItem('订单数量', '32', '-1.5%', Colors.red)),
-              Expanded(
-                  child: _buildSalesItem(
-                      '毛利润', '1532.12', '+32.2%', Colors.green)),
+              Expanded(child: _buildSalesItem('营业额', '3213.32', '+12.2%', Colors.green)),
+              Expanded(child: _buildSalesItem('订单数量', '32', '-1.5%', Colors.red)),
+              Expanded(child: _buildSalesItem('毛利润', '1532.12', '+32.2%', Colors.green)),
             ],
           ),
         ],
@@ -244,8 +242,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
     );
   }
 
-  Widget _buildSalesItem(
-      String title, String value, String percentage, Color color) {
+  Widget _buildSalesItem(String title, String value, String percentage, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -268,7 +265,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
@@ -292,7 +289,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -319,7 +316,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(
@@ -346,7 +343,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: .1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -427,7 +424,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: Colors.blue[700]?.withOpacity(0.1),
+                      color: Colors.blue[700]?.withValues(alpha: 0.1),
                     ),
                   ),
                 ],

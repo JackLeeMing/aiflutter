@@ -1,8 +1,6 @@
 import 'dart:io';
 
-// import 'package:aiflutter/app/mediaKitApp/firework_app.dart';
-// import 'package:aiflutter/app/mediaKitApp/digit_clock_app.dart';
-// import 'package:aiflutter/app/dartPad/dart_pad.dart';
+import 'package:aiflutter/router/app_router.dart';
 import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/utils/package_info.dart';
 import 'package:aiflutter/utils/platform.dart';
@@ -14,7 +12,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:toastification/toastification.dart';
-import 'package:aiflutter/router/app_router.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

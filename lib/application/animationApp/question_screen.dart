@@ -1,5 +1,5 @@
-import 'package:aiflutter/app/animationApp/flip_effect.dart';
-import 'package:aiflutter/app/animationApp/scoreboard.dart';
+import 'package:aiflutter/application/animationApp/flip_effect.dart';
+import 'package:aiflutter/application/animationApp/scoreboard.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 

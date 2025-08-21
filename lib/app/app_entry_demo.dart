@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:aiflutter/router/context_extension.dart';
 import 'package:aiflutter/widgets/window.dart';
-import 'package:aiflutter/router/app_router.dart';
+import 'package:flutter/material.dart';
 
 /// 详情页面 - 空白页面用于演示导航
 class DetailPage extends StatelessWidget {

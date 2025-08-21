@@ -1,3 +1,4 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
@@ -135,6 +136,10 @@ class _ToastnotificationPageState extends State<ToastnotificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -193,15 +198,9 @@ class _ToastnotificationPageState extends State<ToastnotificationPage> {
           child: Container(
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFF5A724), // #F5A724
-                  Color(0xFFF6CF51), // #F
-                  Color(0xFFF5A724), // #F
-                  Color(0xFFF6CF51), // #F6CF51
-                  Color(0xFFF5A724), // #F5A724
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                colors: [Colors.pink, Colors.purple, Colors.deepOrange],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
               ),
             ),
           ),

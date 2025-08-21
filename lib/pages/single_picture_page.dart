@@ -1,3 +1,4 @@
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:nine_grid_view/nine_grid_view.dart';
 
@@ -64,6 +65,10 @@ class _SinglePicturePageState extends State<SinglePicturePage> {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Single Picture'),

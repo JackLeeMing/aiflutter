@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './flip_num_text.dart';
+import 'flip_num_text.dart';
 
 class FlipDemo extends StatefulWidget {
   const FlipDemo({super.key});

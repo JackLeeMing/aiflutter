@@ -7,9 +7,9 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'flutter_flip_clock1.dart';
 // import './flutter_flip_animation_4.dart';
-import './flutter_flip_clock.dart';
+import 'flutter_flip_clock.dart';
+import 'flutter_flip_clock1.dart';
 
 class DigitClockApp extends StatefulWidget {
   const DigitClockApp({super.key});

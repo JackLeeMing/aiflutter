@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:aiflutter/models/ball.dart';
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
@@ -174,6 +175,10 @@ class _BallAnimationPageState extends State<BallAnimationPage> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('小球弹性碰撞')),
       body: Stack(

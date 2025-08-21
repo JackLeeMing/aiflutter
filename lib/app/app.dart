@@ -1,11 +1,9 @@
-import 'package:aiflutter/utils/loggerUtil.dart';
+import 'package:aiflutter/app/app_pages.dart';
+import 'package:aiflutter/router/context_extension.dart';
+import 'package:aiflutter/utils/simple_scroll_manager.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
-import 'package:aiflutter/app/entry/app_pages.dart';
-import 'package:aiflutter/router/app_router.dart';
-import 'package:aiflutter/utils/simple_scroll_manager.dart';
 
 /// 应用程序主入口页面 - iOS风格设置界面
 /// 提供类似iOS系统设置的列表界面，包含分组和导航功能
@@ -23,7 +21,7 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context); // 必须调用，用于 AutomaticKeepAliveClientMixin
-
+    final settingsSections = buildSettingsSections(context);
     return WindowFrameWidget(
       child: Scaffold(
         backgroundColor: Colors.grey[100],
