@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 // import 'package:lpinyin/lpinyin.dart';
 import 'package:pinyin/pinyin.dart';
 import 'package:ruby_text/ruby_text.dart';
-// import '../pages/sales_statistics_page.dart';
 
 class PingYingPage extends StatefulWidget {
   const PingYingPage({super.key});
@@ -24,9 +23,15 @@ class _HomePageState extends State<PingYingPage> {
     String pinyin1 = PinyinHelper.getPinyin(text);
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
-        title: const Text("Pinyin", style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "Pinyin",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Center(
         child: Column(
@@ -56,7 +61,11 @@ class _HomePageState extends State<PingYingPage> {
             ),
             Padding(
               padding: EdgeInsets.all(16),
-              child: Image.asset("assets/flutter.png"),
+              child: Image.asset(
+                "assets/flutter.png",
+                width: 150,
+                height: 150,
+              ),
             ),
           ],
         ),

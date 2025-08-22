@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:aiflutter/router/context_extension.dart';
+import 'package:aiflutter/widgets/flip_panel.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-
-import 'clock/widgets.dart';
 
 class FlutterFlipClockPage extends StatefulWidget {
   const FlutterFlipClockPage({super.key});
@@ -44,7 +43,7 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
     }
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Color.fromARGB(255, 86, 46, 244), // 透明状态栏
+        statusBarColor: Color.fromARGB(255, 31, 30, 33), // 透明状态栏
         statusBarIconBrightness: Brightness.light, // Android
         statusBarBrightness: Brightness.light, // iOS
       ),
@@ -111,7 +110,7 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
       child: Scaffold(
         extendBodyBehindAppBar: true,
         body: Container(
-          color: Color.fromARGB(255, 86, 46, 244),
+          color: Color.fromARGB(255, 15, 15, 16),
           width: double.infinity,
           height: double.infinity,
           child: Column(
@@ -135,6 +134,7 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FlipPanel.stream(
+                    direction: FlipDirection.down,
                     initValue: DateTime.now().hour,
                     itemStream: _hour.stream,
                     itemBuilder: (context, v) => Container(
@@ -154,6 +154,7 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
                   ),
                   SizedBox(width: spacing),
                   FlipPanel.stream(
+                    direction: FlipDirection.down,
                     initValue: DateTime.now().minute,
                     itemStream: _minute.stream,
                     itemBuilder: (context, v) => Container(
@@ -173,6 +174,7 @@ class _FlutterFlipClockState extends State<FlutterFlipClockPage> with WidgetsBin
                   ),
                   SizedBox(width: spacing),
                   FlipPanel.stream(
+                    direction: FlipDirection.down,
                     initValue: DateTime.now().second,
                     itemStream: _second.stream,
                     itemBuilder: (context, v) => Container(

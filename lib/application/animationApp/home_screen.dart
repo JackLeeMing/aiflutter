@@ -1,9 +1,10 @@
 import 'package:aiflutter/application/animationApp/question_screen.dart';
+import 'package:aiflutter/widgets/window.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-class AnimationHomeScreen extends StatelessWidget {
-  const AnimationHomeScreen({super.key});
+class AnimationHomePage extends StatelessWidget {
+  const AnimationHomePage({super.key});
 
   void toNextPage(BuildContext context) {
     // Show the question screen to start the game
@@ -26,7 +27,14 @@ class AnimationHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return WindowFrameWidget(child: buildC(context));
+  }
+
+  Widget buildC(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Animation"),
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -24,11 +24,10 @@ class _FlipNumTextState extends State<FlipNumText> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    print("initState");
     _stateNum = widget.num;
 
     ///动画控制器，正向执行一次后再反向执行一次每次时间为450ms。
-    _controller = new AnimationController(duration: Duration(milliseconds: 450), vsync: this)
+    _controller = AnimationController(duration: Duration(milliseconds: 450), vsync: this)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           ///正向动画执行结束后，反向动画执行标志位设置true 进行反向动画执行
@@ -77,16 +76,17 @@ class _FlipNumTextState extends State<FlipNumText> with SingleTickerProviderStat
             padding: EdgeInsets.only(top: 2.0),
           ),
           Stack(
-            children: <Widget>[
+            children: [
               ClipRectText(_stateNum, Alignment.bottomCenter, color),
 
               ///动画反向执行翻转的组件
               Transform(
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.006)
-                    ..rotateX(_isReversePhase ? -_animation.value : pi / 2),
-                  alignment: Alignment.topCenter,
-                  child: ClipRectText(_nextNum(), Alignment.bottomCenter, color)),
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.006)
+                  ..rotateX(_isReversePhase ? -_animation.value : pi / 2),
+                alignment: Alignment.topCenter,
+                child: ClipRectText(_nextNum(), Alignment.bottomCenter, color),
+              ),
             ],
           )
         ],
@@ -96,7 +96,7 @@ class _FlipNumTextState extends State<FlipNumText> with SingleTickerProviderStat
 
   @override
   void didUpdateWidget(FlipNumText oldWidget) {
-    if (this.widget.num != oldWidget.num) {
+    if (widget.num != oldWidget.num) {
       _controller.forward();
       _stateNum = oldWidget.num;
     }
@@ -146,7 +146,7 @@ class ClipRectText extends StatelessWidget {
           alignment: Alignment.center,
           width: width,
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Color.fromRGBO(41, 41, 41, 1.0),
             borderRadius: BorderRadius.all(Radius.circular(4.0)),
           ),
           child: Text(

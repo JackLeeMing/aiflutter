@@ -3,53 +3,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatelessWidget {
-  final digits = [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-  ];
-  final String title;
-
-  MyHomePage({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: FlipPanel.builder(
-          itemBuilder: (context, index) => Container(
-            alignment: Alignment.center,
-            width: 96.0,
-            height: 128.0,
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.all(Radius.circular(4.0)),
-            ),
-            child: Text(
-              '${digits[index]}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 80.0, color: Colors.yellow),
-            ),
-          ),
-          itemsCount: digits.length,
-          period: const Duration(milliseconds: 1000),
-          loop: -1,
-        ),
-      ),
-    );
-  }
-}
-
 /// Signature for a function that creates a widget for a given index, e.g., in a
 /// list.
 typedef IndexedItemBuilder = Widget Function(BuildContext, int);
@@ -146,8 +99,8 @@ class _FlipPanelState<T> extends State<FlipPanel<T>> with TickerProviderStateMix
   late bool _isStreamMode;
   late bool _running;
   final _perspective = 0.003;
-  final _zeroAngle =
-      0.0001; // There's something wrong in the perspective transform, I use a very small value instead of zero to temporarily get it around.
+  final _zeroAngle = 0.0001;
+  // There's something wrong in the perspective transform, I use a very small value instead of zero to temporarily get it around.
   late int _loop;
   T? _currentValue, _nextValue;
   Timer? _timer;

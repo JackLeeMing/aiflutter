@@ -1,9 +1,13 @@
+import 'package:aiflutter/application/animationApp/home_screen.dart';
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/pages/animated_text_kit_page.dart';
 import 'package:aiflutter/pages/box_transform_app.dart';
 import 'package:aiflutter/pages/countdown_timer_page.dart';
 import 'package:aiflutter/pages/dismiss_view_page.dart';
-import 'package:aiflutter/pages/flutter_liquid_swipe_page.dart';
+import 'package:aiflutter/pages/flip_animation_page.dart';
+import 'package:aiflutter/pages/flip_digit_clock_page.dart';
+import 'package:aiflutter/pages/flip_text_page.dart';
+import 'package:aiflutter/pages/liquid_aws_swipe_page.dart';
 import 'package:aiflutter/pages/liquid_swipe_page.dart';
 import 'package:aiflutter/pages/pingying_page.dart';
 import 'package:aiflutter/pages/ruby_text_page.dart';
@@ -13,7 +17,13 @@ import 'package:aiflutter/utils/icons.dart';
 import 'package:aiflutter/utils/transition_resolver.dart';
 import 'package:go_router/go_router.dart';
 
+// DigitClockPage
 final otherRoutes = [
+  GoRoute(
+    path: '/t1',
+    name: "AnimationHomePage",
+    pageBuilder: (context, state) => transitionResolver(const AnimationHomePage()),
+  ),
   GoRoute(
     path: '/t2',
     name: "BoxTransformPage",
@@ -74,6 +84,43 @@ SettingsSection buildOtherSection(String title) {
       isCamera: false,
     );
     // checkCameraPermission
+  });
+  return SettingsSection(
+    title: title,
+    items: items,
+  );
+}
+
+final flipRoutes = [
+  GoRoute(
+    path: '/t-2',
+    name: "DigitClockPage",
+    pageBuilder: (context, state) => transitionResolver(const DigitClockPage()),
+  ),
+  GoRoute(
+    path: '/t-1',
+    name: "FlipTextPage",
+    pageBuilder: (context, state) => transitionResolver(const FlipTextPage()),
+  ),
+  GoRoute(
+    path: '/t0',
+    name: "FlutterFlipAnimationPage",
+    pageBuilder: (context, state) => transitionResolver(FlutterFlipAnimationPage()),
+  ),
+];
+
+SettingsSection buildFlipSection(String title) {
+  List<SettingsItem> items = List.generate(flipRoutes.length, (int index) {
+    final route = flipRoutes[index];
+    return SettingsItem(
+      icon: randomAwesomeIcon(),
+      iconColor: randomColor(),
+      title: route.name!,
+      subtitle: '功能衍生#${index + 1}',
+      hasArrow: true,
+      path: route.path,
+      isCamera: false,
+    );
   });
   return SettingsSection(
     title: title,

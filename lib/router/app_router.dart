@@ -6,7 +6,7 @@ import 'package:aiflutter/pages/batch_pages.dart';
 import 'package:aiflutter/pages/camerawesome_page.dart';
 import 'package:aiflutter/pages/drag_sort_page.dart';
 import 'package:aiflutter/pages/firework_page.dart';
-import 'package:aiflutter/pages/flutter_flip_clock_page.dart';
+import 'package:aiflutter/pages/flip_clock_page.dart';
 import 'package:aiflutter/pages/heart_page.dart';
 import 'package:aiflutter/pages/navigation_comparison_page.dart';
 import 'package:aiflutter/pages/sales_statistics_page.dart';
@@ -172,6 +172,7 @@ class AppRouter {
         pageBuilder: (context, state) => transitionResolver(const NavigationComparisonPage()),
       ),
       ...otherRoutes,
+      ...flipRoutes,
     ],
 
     // 路由重定向

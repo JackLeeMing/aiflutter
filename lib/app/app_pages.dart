@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final SettingsSection _listSection = SettingsSection(
-  title: '从列表中切换',
+  title: 'List',
   items: [
     SettingsItem(
       icon: FontAwesomeIcons.shapes,
@@ -75,7 +75,7 @@ final SettingsSection _listSection = SettingsSection(
 );
 
 final _love = SettingsSection(
-  title: '爱的魔法',
+  title: 'Love',
   items: [
     SettingsItem(
       icon: FontAwesomeIcons.bomb,
@@ -102,7 +102,7 @@ final _love = SettingsSection(
 );
 
 final _model = SettingsSection(
-  title: '视图',
+  title: 'Model',
   items: [
     SettingsItem(
       icon: FontAwesomeIcons.camera,
@@ -131,7 +131,7 @@ final _model = SettingsSection(
 );
 
 final _fan = SettingsSection(
-  title: '繁',
+  title: 'Tousle',
   items: [
     SettingsItem(
       icon: FontAwesomeIcons.listOl,
@@ -194,8 +194,9 @@ final _fan = SettingsSection(
 
 final List<SettingsSection> settingsSections = [
   _love,
+  buildFlipSection("Flip"),
   _model,
+  buildOtherSection("Other"),
   _fan,
-  buildOtherSection("茂"),
   _listSection,
 ];
