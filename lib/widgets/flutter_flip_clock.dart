@@ -4,8 +4,9 @@ import 'dart:async';
 import 'package:aiflutter/widgets/flip_panel.dart';
 import 'package:flutter/material.dart';
 
-typedef Widget DigitBuilder(BuildContext, int);
+typedef DigitBuilder = Widget Function(BuildContext, int);
 
+// ignore: must_be_immutable
 class FlipClock extends StatelessWidget {
   DigitBuilder? _digitBuilder;
   Widget? _separator;
@@ -102,7 +103,7 @@ class FlipClock extends StatelessWidget {
     final timeStream = (countdownMode ? initStream.take(timeLeft!.inSeconds) : initStream).asBroadcastStream();
 
     var digitList = <Widget>[];
-    // TODO(efortuna): Instead, allow the user to specify the format of time instead.
+    // TODO:  Instead, allow the user to specify the format of time instead.
     // Add hours if appropriate.
 
     if (_showDays) {

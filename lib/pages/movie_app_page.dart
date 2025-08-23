@@ -1,20 +1,22 @@
+import 'package:aiflutter/router/context_extension.dart';
+import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'animated_pages.dart';
-import 'image_slider.dart';
-import 'movie.dart';
-import 'movie_button.dart';
-import 'movie_details.dart';
+import 'movie/animated_pages.dart';
+import 'movie/image_slider.dart';
+import 'movie/movie.dart';
+import 'movie/movie_button.dart';
+import 'movie/movie_details.dart';
 
-class MovieAppHome extends StatefulWidget {
-  const MovieAppHome({super.key});
+class MovieAppPage extends StatefulWidget {
+  const MovieAppPage({super.key});
 
   @override
-  State<MovieAppHome> createState() => _MovieAppHomeState();
+  State<MovieAppPage> createState() => _MovieAppHomeState();
 }
 
-class _MovieAppHomeState extends State<MovieAppHome> {
+class _MovieAppHomeState extends State<MovieAppPage> {
   late PageController _pageController;
   List<Movie> movies = [];
   int currentIndex = 0;
@@ -44,7 +46,12 @@ class _MovieAppHomeState extends State<MovieAppHome> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
+    return WindowFrameWidget(
+      child: buildContent(context),
+    );
+  }
+
+  Widget buildContent(BuildContext context) {
     final reversedMovieList = movies.reversed.toList();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -53,7 +60,7 @@ class _MovieAppHomeState extends State<MovieAppHome> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Stack(
-          children: <Widget>[
+          children: [
             Stack(
               children: reversedMovieList.map((movie) {
                 return ImageSlider(
@@ -96,7 +103,22 @@ class _MovieAppHomeState extends State<MovieAppHome> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => goBack(),
+          tooltip: '返回',
+          mini: true,
+          elevation: 4,
+          shape: CircleBorder(),
+          backgroundColor: Color.fromARGB(255, 64, 238, 151),
+          foregroundColor: Colors.yellow,
+          child: const Icon(Icons.arrow_back_sharp, color: Colors.white),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       ),
     );
+  }
+
+  void goBack() {
+    context.goBack();
   }
 }

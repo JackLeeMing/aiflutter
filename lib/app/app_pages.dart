@@ -195,6 +195,7 @@ final _fan = SettingsSection(
 final List<SettingsSection> settingsSections = [
   _love,
   buildFlipSection("Flip"),
+  buildTestSection("Test"),
   _model,
   buildOtherSection("Other"),
   _fan,

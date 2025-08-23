@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:aiflutter/l10n/gen/app_localizations.dart';
+import 'package:aiflutter/lang/lang.dart';
+import 'package:aiflutter/provider/locale_provider.dart';
 import 'package:aiflutter/router/app_router.dart';
 import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/utils/package_info.dart';
@@ -10,22 +13,29 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  await FlutterLocalization.instance.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await FlutterLocalization.instance.ensureInitialized();
   await Future.delayed(Duration.zero);
   await Util.initStorageDir();
   await initPackageInfo();
   initLogger();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   runApp(
     Phoenix(
+        child: ChangeNotifierProvider(
+      create: (contex) => LocaleProvider(),
       child: const AIFlutterApp(),
-    ),
+    )),
   );
   // 设置窗口大小（仅限桌面平台）
   if (PlatformTool.isDesktop()) {
@@ -55,6 +65,7 @@ class AIFlutterApp extends StatefulWidget {
 }
 
 class _AIFlutterAppState extends State<AIFlutterApp> {
+  final FlutterLocalization localization = FlutterLocalization.instance;
   @override
   void initState() {
     if (Platform.isAndroid) {
@@ -63,7 +74,31 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
       );
     }
     FlutterNativeSplash.remove();
+    localization.init(
+      mapLocales: [
+        const MapLocale('zh', AppLocale.zh),
+        const MapLocale('zh-TW', AppLocale.zhTw),
+        const MapLocale(
+          'en',
+          AppLocale.en,
+          countryCode: 'US',
+          fontFamily: 'Font EN',
+        ),
+        const MapLocale(
+          'km',
+          AppLocale.km,
+          countryCode: 'KH',
+          fontFamily: 'Font KM',
+        ),
+      ],
+      initLanguageCode: 'zh',
+    );
+    localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
+  }
+
+  void _onTranslatedLanguage(Locale? locale) {
+    setState(() {});
   }
 
   @override
@@ -71,84 +106,89 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
     return OKToast(
       child: BotToastInit()(
         context,
-        ToastificationWrapper(
-          child: MaterialApp.router(
-            title: 'AI Flutter',
-            debugShowCheckedModeBanner: false,
-            // 使用 Go Router 配置
-            routerConfig: AppRouter.router,
-            builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
-                child: child!,
-              );
-            },
+        ToastificationWrapper(child: Consumer<LocaleProvider>(
+          builder: (context, provider, child) {
+            return MaterialApp.router(
+              title: 'AI Flutter',
+              debugShowCheckedModeBanner: false,
+              // 使用 Go Router 配置
+              routerConfig: AppRouter.router,
+              builder: (context, child) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
+                  child: child!,
+                );
+              },
 
-            // Material Design 3 主题
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-              useMaterial3: true,
-              // 现代化的 AppBar 样式
-              appBarTheme: const AppBarTheme(
-                centerTitle: true,
-                systemOverlayStyle: SystemUiOverlayStyle.dark,
-                // systemOverlayStyle: SystemUiOverlayStyle.light,
-                backgroundColor: Colors.transparent,
-                scrolledUnderElevation: 0,
-                elevation: 0,
-                titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              // Material Design 3 主题
+              theme: ThemeData(
+                fontFamily: localization.fontFamily,
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+                useMaterial3: true,
+                // 现代化的 AppBar 样式
+                appBarTheme: const AppBarTheme(
+                  centerTitle: true,
+                  systemOverlayStyle: SystemUiOverlayStyle.dark,
+                  // systemOverlayStyle: SystemUiOverlayStyle.light,
+                  backgroundColor: Colors.transparent,
+                  scrolledUnderElevation: 0,
+                  elevation: 0,
+                  titleTextStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
 
-              // 页面转场动画
-              pageTransitionsTheme: const PageTransitionsTheme(
-                builders: {
-                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                  TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                  TargetPlatform.macOS: FadeThroughPageTransitionsBuilder(),
-                  TargetPlatform.windows: FadeThroughPageTransitionsBuilder(),
-                  TargetPlatform.linux: FadeThroughPageTransitionsBuilder(),
-                },
-              ),
-
-              // 卡片样式
-              cardTheme: CardTheme(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                // 页面转场动画
+                pageTransitionsTheme: const PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                    TargetPlatform.macOS: FadeThroughPageTransitionsBuilder(),
+                    TargetPlatform.windows: FadeThroughPageTransitionsBuilder(),
+                    TargetPlatform.linux: FadeThroughPageTransitionsBuilder(),
+                  },
                 ),
-              ),
 
-              // 按钮样式
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
+                // 卡片样式
+                cardTheme: CardTheme(
+                  elevation: 2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
+                ),
+
+                // 按钮样式
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // 深色主题
-            darkTheme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.blue,
-                brightness: Brightness.dark,
+              // 深色主题
+              darkTheme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.blue,
+                  brightness: Brightness.dark,
+                ),
+                useMaterial3: true,
               ),
-              useMaterial3: true,
-            ),
-
-            // 主题模式
-            themeMode: ThemeMode.system,
-          ),
-        ),
+              // 主题模式
+              themeMode: ThemeMode.system,
+              supportedLocales: localization.supportedLocales,
+              localizationsDelegates: [AppLocalizations.delegate, ...localization.localizationsDelegates],
+              locale: provider.locale,
+            );
+          },
+        )),
       ),
     );
   }

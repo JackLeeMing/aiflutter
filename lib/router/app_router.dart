@@ -173,6 +173,7 @@ class AppRouter {
       ),
       ...otherRoutes,
       ...flipRoutes,
+      ...testRoutes
     ],
 
     // 路由重定向

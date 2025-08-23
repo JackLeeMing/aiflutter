@@ -7,18 +7,32 @@ import 'package:aiflutter/pages/dismiss_view_page.dart';
 import 'package:aiflutter/pages/flip_animation_page.dart';
 import 'package:aiflutter/pages/flip_digit_clock_page.dart';
 import 'package:aiflutter/pages/flip_text_page.dart';
+import 'package:aiflutter/pages/i18n_display_page.dart';
 import 'package:aiflutter/pages/liquid_aws_swipe_page.dart';
 import 'package:aiflutter/pages/liquid_swipe_page.dart';
+import 'package:aiflutter/pages/movie_app_page.dart';
 import 'package:aiflutter/pages/pingying_page.dart';
 import 'package:aiflutter/pages/ruby_text_page.dart';
+import 'package:aiflutter/pages/setting_screen_page.dart';
 import 'package:aiflutter/pages/tab_base_page.dart';
+import 'package:aiflutter/pages/video_player.dart';
 import 'package:aiflutter/utils/colors.dart';
 import 'package:aiflutter/utils/icons.dart';
 import 'package:aiflutter/utils/transition_resolver.dart';
 import 'package:go_router/go_router.dart';
 
-// DigitClockPage
+// VideoPlayerPage
 final otherRoutes = [
+  GoRoute(
+    path: '/videoPlayer',
+    name: "VideoPlayerPage",
+    pageBuilder: (context, state) => transitionResolver(const VideoPlayerPage()),
+  ),
+  GoRoute(
+    path: '/movie',
+    name: "MovieAppPage",
+    pageBuilder: (context, state) => transitionResolver(const MovieAppPage()),
+  ),
   GoRoute(
     path: '/t1',
     name: "AnimationHomePage",
@@ -112,6 +126,39 @@ final flipRoutes = [
 SettingsSection buildFlipSection(String title) {
   List<SettingsItem> items = List.generate(flipRoutes.length, (int index) {
     final route = flipRoutes[index];
+    return SettingsItem(
+      icon: randomAwesomeIcon(),
+      iconColor: randomColor(),
+      title: route.name!,
+      subtitle: '功能衍生#${index + 1}',
+      hasArrow: true,
+      path: route.path,
+      isCamera: false,
+    );
+  });
+  return SettingsSection(
+    title: title,
+    items: items,
+  );
+}
+
+// SettingsScreenPage
+final testRoutes = [
+  GoRoute(
+    path: '/i18n',
+    name: "i18n_phone_number_input",
+    pageBuilder: (context, state) => transitionResolver(const I18nDisplayPage()),
+  ),
+  GoRoute(
+    path: '/settingScreen',
+    name: "SettingScreen",
+    pageBuilder: (context, state) => transitionResolver(const SettingsScreenPage()),
+  ),
+];
+
+SettingsSection buildTestSection(String title) {
+  List<SettingsItem> items = List.generate(testRoutes.length, (int index) {
+    final route = testRoutes[index];
     return SettingsItem(
       icon: randomAwesomeIcon(),
       iconColor: randomColor(),

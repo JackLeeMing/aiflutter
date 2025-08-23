@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   file_selector_linux
+  flutter_localization
   url_launcher_linux
 )
 
