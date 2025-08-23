@@ -1,10 +1,43 @@
+import 'package:aiflutter/widgets/window.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:nine_grid_view/nine_grid_view.dart';
 
 import './pages/drag_sort_page.dart';
 import './pages/single_picture_page.dart';
 import './utils/models.dart';
 import './utils/utils.dart';
+import 'utils/platform.dart';
+
+void runNine() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(
+    Phoenix(
+      child: MyNineApp(),
+    ),
+  );
+  // 设置窗口大小（仅限桌面平台）
+  if (PlatformTool.isDesktop()) {
+    doWhenWindowReady(() {
+      const initialSize = Size(600, 800);
+      appWindow.minSize = initialSize;
+      appWindow.maxSize = Size(800, 800);
+      appWindow.size = initialSize;
+      appWindow.alignment = Alignment.center;
+      appWindow.title = "AI Flutter";
+      if (PlatformTool.isWindows()) {
+        WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
+          appWindow.size = initialSize + const Offset(0, 1);
+        });
+      }
+      appWindow.show();
+    });
+  }
+  // FlutterNativeSplash.remove();
+}
 
 class MyNineApp extends StatefulWidget {
   const MyNineApp({super.key});
@@ -17,6 +50,7 @@ class _MyAppState extends State<MyNineApp> {
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -45,7 +79,7 @@ class _MyAppState extends State<MyNineApp> {
         ),
         // 其他全局主题设置...
       ),
-      home: HomePage(),
+      home: WindowFrameWidget(child: HomePage()),
     );
   }
 }
@@ -72,13 +106,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildItem(BuildContext context, int index) {
     int itemCount = index % 9 + 1;
-    if (_gridType == NineGridType.normal ||
-        _gridType == NineGridType.weiBo ||
-        _gridType == NineGridType.weChat) {
+    if (_gridType == NineGridType.normal || _gridType == NineGridType.weiBo || _gridType == NineGridType.weChat) {
       return Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 0.33, color: Color(0xffe5e5e5)))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.33, color: Color(0xffe5e5e5)))),
         padding: EdgeInsets.all(0),
         child: NineGridView(
           margin: EdgeInsets.all(12),
@@ -119,9 +149,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {},
       child: Container(
         padding: EdgeInsets.only(left: 12, top: 12, right: 12, bottom: 12),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 0.33, color: Color(0xffe5e5e5)))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.33, color: Color(0xffe5e5e5)))),
         child: Row(
           children: <Widget>[header],
         ),
@@ -284,28 +312,26 @@ class _HomePageState extends State<HomePage> {
         title: Text(_title),
         actions: <Widget>[_buildMenu()],
       ),
-      body: (_gridType == NineGridType.qqGp ||
-              _gridType == NineGridType.weChatGp ||
-              _gridType == NineGridType.dingTalkGp)
-          ? ListView(
-              physics: AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics()),
-              children: <Widget>[
-                SizedBox(height: 15),
-                _buildGroup(context),
-                Offstage(
-                  offstage: _gridType != NineGridType.qqGp,
-                  child: QQGroup(),
-                ),
-              ],
-            )
-          : ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: 9,
-              padding: EdgeInsets.all(0),
-              itemBuilder: (BuildContext context, int index) {
-                return _buildItem(context, index);
-              }),
+      body:
+          (_gridType == NineGridType.qqGp || _gridType == NineGridType.weChatGp || _gridType == NineGridType.dingTalkGp)
+              ? ListView(
+                  physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                  children: <Widget>[
+                    SizedBox(height: 15),
+                    _buildGroup(context),
+                    Offstage(
+                      offstage: _gridType != NineGridType.qqGp,
+                      child: QQGroup(),
+                    ),
+                  ],
+                )
+              : ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: 9,
+                  padding: EdgeInsets.all(0),
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildItem(context, index);
+                  }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Utils.pushPage(context, DragSortPage());
@@ -331,8 +357,7 @@ class _QQGroupState extends State<QQGroup> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     imageList = Utils.getTestData();
-    _controller = AnimationController(
-        duration: Duration(milliseconds: 2000), vsync: this);
+    _controller = AnimationController(duration: Duration(milliseconds: 2000), vsync: this);
     _controller.addListener(() {
       setState(() {});
     });
