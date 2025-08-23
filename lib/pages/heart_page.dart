@@ -76,25 +76,24 @@ class _HeartFeaturePageState extends State<HeartFeaturePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...List.generate(colors.length, (index) {
-                        return Row(
-                          children: [
-                            TriangleCorner(
-                              triangleColor:
-                                  _heartController.colorIndex == index ? Colors.pinkAccent : Colors.transparent,
-                              position: TrianglePosition.right,
-                              child: Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  color: colors[index],
-                                  // borderRadius: BorderRadius.circular(2),
-                                ),
+                        // 使用 Padding 替代 Sizedbox 来控制间隔
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2.5),
+                          child: TriangleCorner(
+                            triangleColor:
+                                _heartController.colorIndex == index ? Colors.pinkAccent : Colors.transparent,
+                            position: TrianglePosition.left,
+                            child: Container(
+                              width: 16,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: colors[index],
+                                // borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                            SizedBox(width: 5)
-                          ],
+                          ),
                         );
-                      })
+                      }),
                     ],
                   )
                 ],
