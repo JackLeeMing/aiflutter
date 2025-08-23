@@ -1753,6 +1753,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  watermark_widget:
+    dependency: "direct main"
+    description:
+      name: watermark_widget
+      sha256: "9e5de39630daaa98963ff7de2bb33e1b117a3b6bdc9af0bd8848d0cbf1ffe5c4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   web:
     dependency: transitive
     description:

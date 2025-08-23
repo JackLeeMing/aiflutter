@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import './heart.dart';
+
 // MARK: - 数据模型
 
 /// 粒子数据模型
@@ -224,7 +226,7 @@ class FireworksController extends ChangeNotifier {
   // 打字机效果相关状态
   String _displayedText = '';
   int _currentCharIndex = 0;
-  final String _fullText = '我喜欢你';
+  final String _fullText = '你超棒的啦!'; //'我喜欢你';
   Timer? _typingTimer;
 
   static const double _gravity = 0.05;
@@ -425,7 +427,9 @@ class FireworksController extends ChangeNotifier {
 
   /// 生成一个随机的颜色
   Color _randomColor() {
-    return HSLColor.fromAHSL(1.0, _random.nextDouble() * 360, 1.0, 0.5).toColor();
+    final Random random = Random();
+    return colors[random.nextInt(colors.length)];
+    // HSLColor.fromAHSL(1.0, _random.nextDouble() * 360, 1.0, 0.5).toColor();
   }
 
   /// 启动浪漫动画序列

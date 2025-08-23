@@ -89,6 +89,7 @@ dependencies:
   flutter_localization: ^0.3.3
   provider: ^6.1.5+1
   device_preview: ^1.2.0
+  watermark_widget: ^1.0.0
 
 dependency_overrides:
   tdesign_flutter:
