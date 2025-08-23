@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aiflutter/widgets/flip_panel.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class FireworksPage extends StatefulWidget {
 class _FireworksPageState extends State<FireworksPage> {
   late final FireworksController _fireworksController;
   var isRunning = true;
+  final countNumber = 10;
 
   @override
   void initState() {
@@ -55,6 +57,40 @@ class _FireworksPageState extends State<FireworksPage> {
     }
   }
 
+  Widget buildFlip() {
+    return FlipPanel.builder(
+      onCountComplete: () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // 确保在 build 方法完成后再调用
+          _fireworksController.startCountdown();
+        });
+      },
+      direction: FlipDirection.down,
+      itemBuilder: (context, index) {
+        return Container(
+          alignment: Alignment.center,
+          width: 102.0,
+          height: 128.0,
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(41, 41, 41, 1.0),
+            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          ),
+          child: Text(
+            '${countNumber - index}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 80.0,
+              color: Colors.white,
+            ),
+          ),
+        );
+      },
+      itemsCount: countNumber,
+      period: const Duration(milliseconds: 1000),
+      loop: -1,
+    );
+  }
+
   /// 构建倒计时Widget
   Widget _buildCountdownWidget() {
     return Center(
@@ -70,7 +106,7 @@ class _FireworksPageState extends State<FireworksPage> {
               border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1),
             ),
             child: const Text(
-              '浪漫倒计时',
+              '开始倒计时',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -86,16 +122,9 @@ class _FireworksPageState extends State<FireworksPage> {
               ),
             ),
           ),
-
           const SizedBox(height: 30),
-
           // 翻页数字
-          FlipClockDigit(
-            key: ValueKey('countdown_${_fireworksController.countdownValue}'),
-            currentValue: _fireworksController.countdownValue,
-            previousValue: _fireworksController.previousCountdownValue,
-          ),
-
+          buildFlip(),
           const SizedBox(height: 20),
 
           // 底部提示文字
@@ -441,7 +470,7 @@ class _FireworksPageState extends State<FireworksPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(width: 8),
-                              Text('💕千万别点💕'),
+                              Text('💕再来一次💕'),
                             ],
                           ),
                         ),

@@ -29,6 +29,7 @@ class FlipPanel<T> extends StatefulWidget {
   final T? initValue;
   final double spacing;
   final FlipDirection direction;
+  final VoidCallback? onCountComplete;
 
   const FlipPanel({
     Key? key,
@@ -43,6 +44,7 @@ class FlipPanel<T> extends StatefulWidget {
     this.initValue,
     required this.spacing,
     required this.direction,
+    this.onCountComplete,
   }) : super(key: key);
 
   /// Create a flip panel from iterable source
@@ -52,7 +54,7 @@ class FlipPanel<T> extends StatefulWidget {
   /// The [period] should be two times greater than [duration] of flip animation,
   /// if not the animation becomes jerky/stuttery.
   FlipPanel.builder({
-    Key? key,
+    super.key,
     required IndexedItemBuilder itemBuilder,
     required this.itemsCount,
     required this.period,
@@ -61,34 +63,34 @@ class FlipPanel<T> extends StatefulWidget {
     this.startIndex = 0,
     this.spacing = 0.5,
     this.direction = FlipDirection.up,
+    this.onCountComplete,
   })  : assert(startIndex < itemsCount),
         assert(period == null || period.inMilliseconds >= 2 * duration.inMilliseconds),
         indexedItemBuilder = itemBuilder,
         streamItemBuilder = null,
         itemStream = null,
-        initValue = null,
-        super(key: key);
+        initValue = null;
 
   /// Create a flip panel from stream source
   /// [itemBuilder] is called whenever a new value is emitted from [itemStream]
-  FlipPanel.stream({
-    Key? key,
+  const FlipPanel.stream({
+    super.key,
     required this.itemStream,
     required StreamItemBuilder<T> itemBuilder,
     this.initValue,
     this.duration = const Duration(milliseconds: 500),
     this.spacing = 0.5,
     this.direction = FlipDirection.up,
+    this.onCountComplete,
   })  : indexedItemBuilder = null,
         streamItemBuilder = itemBuilder,
         itemsCount = 0,
         period = null,
         loop = 0,
-        startIndex = 0,
-        super(key: key);
+        startIndex = 0;
 
   @override
-  _FlipPanelState<T> createState() => _FlipPanelState<T>();
+  State<FlipPanel<T>> createState() => _FlipPanelState<T>();
 }
 
 class _FlipPanelState<T> extends State<FlipPanel<T>> with TickerProviderStateMixin {
@@ -211,6 +213,9 @@ class _FlipPanelState<T> extends State<FlipPanel<T>> with TickerProviderStateMix
     }
 
     if (_running) {
+      if (widget.onCountComplete != null && _currentIndex == widget.itemsCount - 1) {
+        widget.onCountComplete!();
+      }
       if (_child1 == null) {
         _child1 = _child2 ??
             (_isStreamMode

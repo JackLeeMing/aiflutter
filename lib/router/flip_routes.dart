@@ -16,17 +16,17 @@ final flipRoutes = [
     pageBuilder: (context, state) => transitionResolver(const FlutterFlipClockPage()),
   ),
   GoRoute(
-    path: '/t-2',
+    path: '/flip3',
     name: "Digit Clock",
     pageBuilder: (context, state) => transitionResolver(const DigitClockPage()),
   ),
   GoRoute(
-    path: '/t-1',
+    path: '/flip2',
     name: "Flip Text",
     pageBuilder: (context, state) => transitionResolver(const FlipTextPage()),
   ),
   GoRoute(
-    path: '/t0',
+    path: '/flip1',
     name: "Flip Animation",
     pageBuilder: (context, state) => transitionResolver(FlutterFlipAnimationPage()),
   ),

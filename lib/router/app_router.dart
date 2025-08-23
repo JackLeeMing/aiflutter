@@ -5,9 +5,9 @@ import 'package:aiflutter/pages/ball_animation_page.dart';
 import 'package:aiflutter/pages/batch_pages.dart';
 import 'package:aiflutter/pages/camerawesome_page.dart';
 import 'package:aiflutter/pages/drag_sort_page.dart';
-import 'package:aiflutter/pages/firework_page.dart';
 import 'package:aiflutter/pages/heart_page.dart';
 import 'package:aiflutter/pages/navigation_comparison_page.dart';
+import 'package:aiflutter/pages/romantic_firework_page.dart';
 import 'package:aiflutter/pages/sales_statistics_page.dart';
 import 'package:aiflutter/pages/single_picture_page.dart';
 import 'package:aiflutter/pages/toast_notification_page.dart';
@@ -28,7 +28,7 @@ class AppRouter {
   /// 路由配置
   static final GoRouter router = GoRouter(
     // 初始路由
-    initialLocation: AppRoutes.home, // '/i18n',
+    initialLocation: AppRoutes.home, //AppRoutes.fireworks, //AppRoutes.home, // '/i18n',
     navigatorKey: AppConstant.navigatorKey,
     observers: [BotToastNavigatorObserver()],
 

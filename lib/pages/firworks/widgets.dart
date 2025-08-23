@@ -215,8 +215,6 @@ class FireworksController extends ChangeNotifier {
 
   // 浪漫动画相关状态
   RomanticAnimationState _romanticState = RomanticAnimationState.initial;
-  int _countdownValue = 10;
-  int _previousCountdownValue = 11; // 新增：跟踪上一个倒计时值
   double _heartScale = 1.0;
   double _heartAlpha = 1.0;
   bool _heartBeating = false;
@@ -242,8 +240,6 @@ class FireworksController extends ChangeNotifier {
 
   // 浪漫动画状态getter
   RomanticAnimationState get romanticState => _romanticState;
-  int get countdownValue => _countdownValue;
-  int get previousCountdownValue => _previousCountdownValue; // 新增getter
   double get heartScale => _heartScale;
   double get heartAlpha => _heartAlpha;
   bool get animationCompleted => _animationCompleted;
@@ -257,8 +253,6 @@ class FireworksController extends ChangeNotifier {
     _canvasSize = size;
     isRunning = true;
     _romanticState = RomanticAnimationState.initial;
-    _countdownValue = 10;
-    _previousCountdownValue = 11; // 重置上一个值
     _heartScale = 1.0;
     _heartAlpha = 1.0;
     _heartBeating = false;
@@ -439,31 +433,25 @@ class FireworksController extends ChangeNotifier {
     // 延时3秒后开始倒计时
     _romanticTimer = Timer(const Duration(seconds: 3), () {
       if (isRunning) {
-        _startCountdown();
+        _romanticState = RomanticAnimationState.countdown;
       }
     });
   }
 
   /// 开始10秒倒计时
-  void _startCountdown() {
-    _romanticState = RomanticAnimationState.countdown;
-    _countdownValue = 10;
-    _previousCountdownValue = 11;
-    notifyListeners();
+  void startCountdown() {
+    // _showLoveText();
+    // _romanticState = RomanticAnimationState.heartWithText; // loveText
+    // _displayedText = '';
+    // _currentCharIndex = 0;
+    // notifyListeners();
+    _showLoveText();
+  }
 
-    // 每秒更新倒计时
-    _romanticTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (isRunning && _countdownValue > 0) {
-        _previousCountdownValue = _countdownValue; // 保存当前值作为上一个值
-        _countdownValue--;
-        notifyListeners();
-      } else {
-        timer.cancel();
-        if (isRunning) {
-          _showLoveText();
-        }
-      }
-    });
+  void startCountUp(int number) {
+    if (number >= 10) {
+      _showLoveText();
+    }
   }
 
   /// 显示"我喜欢你"文字

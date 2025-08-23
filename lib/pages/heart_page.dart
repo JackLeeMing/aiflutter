@@ -64,7 +64,29 @@ class _HeartFeaturePageState extends State<HeartFeaturePage> {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text('浪漫动画效果展示'),
+                  Text(
+                    '浪漫 Brilliant & Romantic',
+                    style: TextStyle(
+                      color: _heartController.heartColor,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ...List.generate(colors.length, (index) {
+                        return Container(
+                          width: 10,
+                          height: 10,
+                          margin: EdgeInsetsDirectional.all(2),
+                          decoration: BoxDecoration(
+                            color: colors[index],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        );
+                      })
+                    ],
+                  )
                 ],
               ),
             ),
