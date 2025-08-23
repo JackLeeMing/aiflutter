@@ -66,7 +66,7 @@ final List<SettingsSection> settingsSections = [
   _love,
   _system,
   buildFlipSection("Flip"),
-  buildTestSection("Test"),
+  buildTestSection("Test+GoRoute扩展"),
   _model,
   // buildOtherSection("Other"),
   //  _listSection,

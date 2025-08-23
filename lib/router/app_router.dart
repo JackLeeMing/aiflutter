@@ -28,7 +28,7 @@ class AppRouter {
   /// 路由配置
   static final GoRouter router = GoRouter(
     // 初始路由
-    initialLocation: AppRoutes.home,
+    initialLocation: AppRoutes.home, // '/i18n',
     navigatorKey: AppConstant.navigatorKey,
     observers: [BotToastNavigatorObserver()],
 

@@ -1,3 +1,5 @@
 {
-  "f1": "Tempting World"
+  "f1": "Tempting World",
+  "phHintText":"Phone number",
+  "phSearchHint":"Search by country name or dial code"
 }

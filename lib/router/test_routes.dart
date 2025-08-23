@@ -2,12 +2,21 @@
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/pages/i18n_display_page.dart';
 import 'package:aiflutter/pages/setting_screen_page.dart';
+import 'package:aiflutter/pages/shop_cart_page.dart';
 import 'package:aiflutter/utils/colors.dart';
 import 'package:aiflutter/utils/icons.dart';
 import 'package:aiflutter/utils/transition_resolver.dart';
+import 'package:aiflutter/widgets/window.dart';
 import 'package:go_router/go_router.dart';
 
+import './go_route_extension.dart';
+
 final testRoutes = [
+  GoRoute(
+    path: '/cart',
+    name: "AddToCartAnimationPage",
+    pageBuilder: (context, state) => transitionResolver(const WindowFrameWidget(child: MultiProductAddToCartPage())),
+  ),
   GoRoute(
     path: '/i18n',
     name: "i18n_phone_number_input",
@@ -26,7 +35,7 @@ SettingsSection buildTestSection(String title) {
     return SettingsItem(
       icon: randomAwesomeIcon(),
       iconColor: randomColor(),
-      title: route.name!,
+      title: route.displayName!,
       subtitle: '功能衍生#${index + 1}',
       hasArrow: true,
       path: route.path,

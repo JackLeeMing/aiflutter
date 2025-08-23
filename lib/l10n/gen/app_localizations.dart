@@ -100,6 +100,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'花花世界'**
   String get f1;
+
+  /// No description provided for @phHintText.
+  ///
+  /// In zh, this message translates to:
+  /// **'电话号码'**
+  String get phHintText;
+
+  /// No description provided for @phSearchHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'使用名字或电话号码搜索'**
+  String get phSearchHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

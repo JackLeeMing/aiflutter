@@ -8,4 +8,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get f1 => 'Tempting World';
+
+  @override
+  String get phHintText => 'Phone number';
+
+  @override
+  String get phSearchHint => 'Search by country name or dial code';
 }
