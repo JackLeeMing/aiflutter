@@ -160,6 +160,7 @@ class _MultiProductAddToCartPageState extends State<MultiProductAddToCartPage> {
   final Map<int, GlobalKey> _productKeys = {};
   OverlayEntry? _overlayEntry;
   final ValueNotifier<int> _itemCount = ValueNotifier<int>(0);
+  final int itemCount = 10;
 
   @override
   void dispose() {
@@ -279,28 +280,42 @@ class _MultiProductAddToCartPageState extends State<MultiProductAddToCartPage> {
         ],
       ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: itemCount,
         itemBuilder: (context, index) {
           _productKeys.putIfAbsent(index, () => GlobalKey());
-          return Column(
-            children: [
-              ListTile(
-                key: _productKeys[index],
-                leading: Container(width: 50, height: 50, color: randomColor()),
-                title: Text('商品 $index'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.add_shopping_cart),
-                  onPressed: () => _onAddToCart(index),
+          final isLast = itemCount == index + 1;
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: isLast
+                  ? null
+                  : Border(
+                      bottom: BorderSide(
+                        color: Colors.grey[300]!,
+                        width: 0.5,
+                      ),
+                    ),
+            ),
+            child: ListTile(
+              key: _productKeys[index],
+              leading: Container(
+                width: 50,
+                height: 50,
+                color: randomColor(),
+                child: Center(
+                  child: Text(
+                    "${index + 1}",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-              const Divider(
-                height: 10, // 分隔线的高度
-                thickness: 1, // 分隔线的粗细
-                indent: 16, // 左侧缩进
-                endIndent: 16, // 右侧缩进
-                // color: Colors.grey.shade500,
+              title: Text('商品#${index + 1}'),
+              trailing: IconButton(
+                icon: const Icon(Icons.add_shopping_cart),
+                onPressed: () => _onAddToCart(index),
               ),
-            ],
+            ),
           );
         },
       ),
