@@ -1,5 +1,6 @@
 import 'package:aiflutter/pages/firworks/heart.dart';
 import 'package:aiflutter/pages/firworks/widgets.dart';
+import 'package:aiflutter/widgets/triangle_painter.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class _HeartFeaturePageState extends State<HeartFeaturePage> {
               iconTheme: IconThemeData(color: _heartController.heartColor),
               title: Icon(Icons.favorite, size: 32, color: _heartController.heartColor),
             ),
-            body: Center(
+            body: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -56,7 +57,7 @@ class _HeartFeaturePageState extends State<HeartFeaturePage> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    '爱心效果',
+                    '心想事成',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -75,14 +76,23 @@ class _HeartFeaturePageState extends State<HeartFeaturePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...List.generate(colors.length, (index) {
-                        return Container(
-                          width: 10,
-                          height: 10,
-                          margin: EdgeInsetsDirectional.all(2),
-                          decoration: BoxDecoration(
-                            color: colors[index],
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                        return Row(
+                          children: [
+                            TriangleCorner(
+                              triangleColor:
+                                  _heartController.colorIndex == index ? Colors.pinkAccent : Colors.transparent,
+                              position: TrianglePosition.right,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: colors[index],
+                                  // borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5)
+                          ],
                         );
                       })
                     ],

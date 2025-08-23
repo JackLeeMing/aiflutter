@@ -31,6 +31,7 @@ class HeartController extends ChangeNotifier {
   double get heartScale => _heartScale;
   double get heartAlpha => _heartAlpha;
   Color get heartColor => colors[_colorIndex];
+  int get colorIndex => _colorIndex;
   int _colorIndex = 0;
 
   /// 启动动画和烟花发射
