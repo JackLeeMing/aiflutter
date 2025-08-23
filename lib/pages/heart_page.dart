@@ -2,6 +2,7 @@ import 'package:aiflutter/pages/firworks/heart.dart';
 import 'package:aiflutter/pages/firworks/widgets.dart';
 import 'package:aiflutter/widgets/triangle_painter.dart';
 import 'package:aiflutter/widgets/window.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
 class HeartFeaturePage extends StatefulWidget {
@@ -56,21 +57,34 @@ class _HeartFeaturePageState extends State<HeartFeaturePage> {
                     color: _heartController.heartColor,
                   ),
                   SizedBox(height: 16),
-                  Text(
-                    '心想事成',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: _heartController.heartColor,
-                    ),
+                  AnimatedTextKit(
+                    repeatForever: true,
+                    animatedTexts: [
+                      ColorizeAnimatedText(
+                        '愿你心想事成，永远快乐',
+                        textStyle: const TextStyle(fontSize: 24.0),
+                        colors: [
+                          Colors.deepPurpleAccent,
+                          Colors.redAccent,
+                          Colors.purpleAccent,
+                          Colors.redAccent,
+                          Colors.deepPurpleAccent,
+                        ],
+                      ),
+                    ],
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    '浪漫 Brilliant & Romantic',
-                    style: TextStyle(
-                      color: _heartController.heartColor,
-                    ),
+                  AnimatedTextKit(
+                    repeatForever: true,
+                    animatedTexts: [
+                      ColorizeAnimatedText(
+                        '浪漫 Brilliant & Romantic',
+                        textStyle: const TextStyle(fontSize: 16.0),
+                        colors: [...colors],
+                      ),
+                    ],
                   ),
+                  SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
