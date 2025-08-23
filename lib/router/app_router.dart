@@ -6,13 +6,14 @@ import 'package:aiflutter/pages/batch_pages.dart';
 import 'package:aiflutter/pages/camerawesome_page.dart';
 import 'package:aiflutter/pages/drag_sort_page.dart';
 import 'package:aiflutter/pages/firework_page.dart';
-import 'package:aiflutter/pages/flip_clock_page.dart';
 import 'package:aiflutter/pages/heart_page.dart';
 import 'package:aiflutter/pages/navigation_comparison_page.dart';
 import 'package:aiflutter/pages/sales_statistics_page.dart';
 import 'package:aiflutter/pages/single_picture_page.dart';
 import 'package:aiflutter/pages/toast_notification_page.dart';
 import 'package:aiflutter/router/app_routes.dart';
+import 'package:aiflutter/router/flip_routes.dart';
+import 'package:aiflutter/router/test_routes.dart';
 import 'package:aiflutter/utils/constant.dart';
 import 'package:aiflutter/utils/transition_resolver.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -47,6 +48,21 @@ class AppRouter {
         name: "CameraAwesomePage",
         pageBuilder: (context, state) => transitionResolver(const CameraAwesomePage()),
       ),
+
+      // 爱心烟花功能页
+      GoRoute(
+        path: AppRoutes.heart,
+        name: AppRoutes.heartName,
+        pageBuilder: (context, state) => transitionResolver(const HeartFeaturePage()),
+      ),
+
+      GoRoute(
+        path: AppRoutes.fireworks,
+        name: "FireworksPage",
+        pageBuilder: (context, state) => transitionResolver(const FireworksPage()),
+      ),
+
+      //
       // 详情页路由 - 支持参数传递
       GoRoute(
         path: AppRoutes.detail,
@@ -60,74 +76,6 @@ class AppRouter {
             iconColor: extra?['iconColor'] ?? Colors.blue,
           );
         },
-      ),
-
-      // 爱心烟花功能页
-      GoRoute(
-        path: AppRoutes.heart,
-        name: AppRoutes.heartName,
-        pageBuilder: (context, state) => transitionResolver(const HeartFeaturePage()),
-      ),
-
-      // 几何布局功能页
-      GoRoute(
-        path: AppRoutes.geometry,
-        name: AppRoutes.geometryName,
-        pageBuilder: (context, state) => transitionResolver(const GeometryFeaturePage()),
-      ),
-
-      // 作文灵感功能页
-      GoRoute(
-        path: AppRoutes.writing,
-        name: AppRoutes.writingName,
-        pageBuilder: (context, state) => transitionResolver(const WritingFeaturePage()),
-      ),
-
-      // 口算题功能页
-      GoRoute(
-        path: AppRoutes.math,
-        name: AppRoutes.mathName,
-        pageBuilder: (context, state) => transitionResolver(const MathFeaturePage()),
-      ),
-
-      // 古诗词功能页
-      GoRoute(
-        path: AppRoutes.poetry,
-        name: AppRoutes.poetryName,
-        pageBuilder: (context, state) => transitionResolver(const PoetryFeaturePage()),
-      ),
-
-      // 科学实验功能页
-      GoRoute(
-        path: AppRoutes.science,
-        name: AppRoutes.scienceName,
-        pageBuilder: (context, state) => transitionResolver(const ScienceFeaturePage()),
-      ),
-
-      // 阅读书单功能页
-      GoRoute(
-        path: AppRoutes.reading,
-        name: AppRoutes.readingName,
-        pageBuilder: (context, state) => transitionResolver(const ReadingFeaturePage()),
-      ),
-
-      // 英语自我介绍功能页
-      GoRoute(
-        path: AppRoutes.english,
-        name: AppRoutes.englishName,
-        pageBuilder: (context, state) => transitionResolver(const EnglishFeaturePage()),
-      ),
-
-      GoRoute(
-        path: AppRoutes.fireworks,
-        name: "FireworksPage",
-        pageBuilder: (context, state) => transitionResolver(const FireworksPage()),
-      ),
-
-      GoRoute(
-        path: AppRoutes.clock,
-        name: "FlutterFlipClockPage",
-        pageBuilder: (context, state) => transitionResolver(const FlutterFlipClockPage()),
       ),
 
       GoRoute(

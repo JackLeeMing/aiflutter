@@ -1,4 +1,6 @@
+import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/router/app_routes.dart';
+import 'package:aiflutter/utils/loggerUtil.dart';
 import 'package:aiflutter/widgets/ios_presentation_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -23,20 +25,16 @@ extension AppRouterExtension on BuildContext {
 
   /// 跳转到功能页面
   /// 使用 push 导航保持原页面状态
-  void goToFeature(String featureName, BuildContext context) {
+  void goToFeature(SettingsItem item, BuildContext context) {
+    final featureName = item.title;
+    logger.d('$featureName, path: ${item.path}');
+    if (item.path != null && item.path != '') {
+      push(item.path!);
+      return;
+    }
+
+    logger.d(featureName);
     switch (featureName) {
-      case '爱心+烟花':
-        push(AppRoutes.fireworks);
-        break;
-      case '爱心':
-        push(AppRoutes.heart);
-        break;
-      case '翻页时钟':
-        push(AppRoutes.clock);
-        break;
-      case 'GeometryReader':
-        push(AppRoutes.geometry);
-        break;
       case 'PreferenceKey':
         goToDetail(title: featureName, subtitle: '偏好设置键值管理');
         break;
@@ -50,24 +48,6 @@ extension AppRouterExtension on BuildContext {
       case 'Sheet Modal':
         // 不使用路由，直接调用展示方法
         _showSheet(context);
-        break;
-      case '作文灵感':
-        push(AppRoutes.writing);
-        break;
-      case '口算题':
-        push(AppRoutes.math);
-        break;
-      case '古诗词':
-        push(AppRoutes.poetry);
-        break;
-      case '科学实验':
-        push(AppRoutes.science);
-        break;
-      case '阅读书单':
-        push(AppRoutes.reading);
-        break;
-      case '英语自我介绍':
-        push(AppRoutes.english);
         break;
       default:
         goToDetail(title: featureName, subtitle: '功能开发中...');

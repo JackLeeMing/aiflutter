@@ -8,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 /// Set to `true` to see the full possibilities of the iOS Developer Screen
-const bool runCupertinoApp = true;
 
-void runSetting() {
+void runSetting({bool runCupertinoApp = false}) {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     DevicePreview(
       enabled: false,
-      builder: (_) => MyApp(),
+      builder: (_) => MyApp(runCupertinoApp: runCupertinoApp),
     ),
   );
   // 设置窗口大小（仅限桌面平台）
@@ -40,7 +39,8 @@ void runSetting() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool runCupertinoApp;
+  const MyApp({super.key, required this.runCupertinoApp});
 
   @override
   Widget build(BuildContext context) {
@@ -48,18 +48,23 @@ class MyApp extends StatelessWidget {
       return CupertinoApp(
         locale: Locale('zh', 'zh'), //DevicePreview.locale(context),
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+        localizationsDelegates: [
           DefaultMaterialLocalizations.delegate,
           DefaultWidgetsLocalizations.delegate,
           DefaultCupertinoLocalizations.delegate,
         ],
-        title: 'Settings UI Demo',
+        title: 'Settings Cupertino UI Demo',
         home: WindowFrameWidget(child: GalleryScreen()),
       );
     } else {
       return MaterialApp(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         locale: Locale('zh', 'zh'), //DevicePreview.locale(context),
+        localizationsDelegates: [
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+        ],
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark().copyWith(
             cupertinoOverrideTheme: CupertinoThemeData(
@@ -67,7 +72,7 @@ class MyApp extends StatelessWidget {
                 brightness: Brightness.dark,
                 textTheme: CupertinoTextThemeData(primaryColor: Colors.white)),
             brightness: Brightness.dark),
-        title: 'Settings UI Demo',
+        title: 'Settings  Material UI Demo',
         home: WindowFrameWidget(child: GalleryScreen()),
       );
     }

@@ -8,7 +8,6 @@ import 'package:aiflutter/widgets/window.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 
 /// 应用程序主入口页面 - iOS风格设置界面
 /// 提供类似iOS系统设置的列表界面，包含分组和导航功能
@@ -211,15 +210,12 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
     }
   }
 
+// 进入下一页
   void _goNextPage(SettingsItem item) {
     if (item.onTap != null) {
       item.onTap!();
     } else {
-      if (item.path != null && item.path != "") {
-        context.push(item.path!);
-      } else {
-        context.goToFeature(item.title, context);
-      }
+      context.goToFeature(item, context);
     }
   }
 }
