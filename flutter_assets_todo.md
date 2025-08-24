@@ -13,6 +13,11 @@
 - [ ] [Flutter Cool Demo - 酷炫演示集合](https://github.com/quanNullable/flutter-cool-demo/tree/master/lib)
 - [x] [Flutter Flip Clock - 翻页时钟](https://github.com/echokk11/flutter_flip_clock)
 - [ ] [Flutter Demo 集合](https://github.com/lifelikejuly/Flutter_Demo)
+- [ ] [张风捷特烈 编程之王](https://github.com/toly1994328)
+- [ ] [nylo](https://nylo.dev/docs/6.x/router)
+- [ ] [HarmonyUnit](https://github.com/toly1994328/HarmonyUnit)
+- [ ] [Flame](https://github.com/flame-engine/flame)
+- [ ] [toly_game](https://github.com/toly1994328/toly_game)
 
 ## 技术文章学习
 
