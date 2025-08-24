@@ -1,7 +1,7 @@
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/router/app_routes.dart';
-import 'package:aiflutter/router/flip_routes.dart';
-import 'package:aiflutter/router/test_routes.dart';
+// import 'package:aiflutter/router/flip_routes.dart';
+// import 'package:aiflutter/router/test_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -33,7 +33,7 @@ final _system = SettingsSection(
     SettingsItem(
       icon: FontAwesomeIcons.camera,
       iconColor: Colors.deepOrange,
-      title: '系统相机',
+      title: '拍照',
       subtitle: '系统相机调用',
       hasArrow: true,
       path: AppRoutes.awesomeCamera,
@@ -65,9 +65,9 @@ final _model = SettingsSection(
 final List<SettingsSection> settingsSections = [
   _love,
   _system,
-  buildFlipSection("Flip"),
-  buildTestSection("Test+GoRoute扩展"),
-  _model,
+  // buildFlipSection("Flip"),
+  // buildTestSection("Test+GoRoute扩展"),
+  // _model,
   // buildOtherSection("Other"),
   //  _listSection,
 ];

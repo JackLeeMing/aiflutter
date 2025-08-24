@@ -33,7 +33,7 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
             repeatForever: true,
             animatedTexts: [
               ColorizeAnimatedText(
-                'AI & 爱与遇见',
+                'AI & 相遇相知',
                 textStyle: const TextStyle(fontSize: 22.0),
                 colors: [
                   Colors.deepPurpleAccent,

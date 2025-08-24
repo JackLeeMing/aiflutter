@@ -414,7 +414,7 @@ class _FireworksPageState extends State<FireworksPage> {
       child: Scaffold(
         appBar: AppBar(
             title: const Text(
-              '烂漫的烟花秀',
+              '烟花秀',
               style: TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.black,

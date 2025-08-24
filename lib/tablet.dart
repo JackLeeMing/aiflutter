@@ -1,15 +1,19 @@
 import 'package:aiflutter/pages/images/image_selector.dart';
+import 'package:aiflutter/utils/loggerUtil.dart';
+import 'package:aiflutter/utils/package_info.dart';
+import 'package:aiflutter/utils/util.dart';
+import 'package:aiflutter/widgets/color_scheme_display.dart';
+import 'package:aiflutter/widgets/triangle_painter.dart';
 import 'package:aiflutter/widgets/window.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:aiflutter/pages/firworks/heart.dart';
 
 import 'utils/platform.dart';
 
 List<ImageProvider> get assetsImage => [
-      'assets/images/home_1.png',
-      'assets/images/home_2.png',
       'assets/images/good_boys.jpg',
       'assets/images/joker.png',
       'assets/images/lion_king.jpg',
@@ -19,6 +23,10 @@ List<ImageProvider> get assetsImage => [
 void runTablet() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Future.delayed(Duration.zero);
+  await Util.initStorageDir();
+  await initPackageInfo();
+  initLogger();
   runApp(
     Phoenix(
       child: MyTabletApp(),
@@ -52,90 +60,158 @@ class MyTabletApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyTabletApp> {
-  int? _activeIndex;
   ColorScheme scheme = ColorScheme.fromSeed(seedColor: Colors.purple);
-  Color activeColor = Colors.white;
+  Color activeColor = Colors.cyan;
+  int colorIndex = -1;
 
   @override
   void initState() {
     super.initState();
+    activeColor = scheme.primary;
+    FlutterNativeSplash.remove();
+  }
+
+  void _onColorSchemeChanged(ColorScheme newScheme, int index) {
+    setState(() {
+      scheme = newScheme;
+      activeColor = newScheme.primary;
+      colorIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 提取所有颜色属性
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      showSemanticsDebugger: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: scheme, // 使用动态的 ColorScheme
+      ),
+      home: WindowFrameWidget(
+        child: MyTabletHomeScreen(
+          initialColorScheme: scheme,
+          onColorSchemeChanged: _onColorSchemeChanged,
+          colorIndex: colorIndex,
+        ),
+      ),
+    );
+  }
+}
+
+class MyTabletHomeScreen extends StatefulWidget {
+  final ColorScheme initialColorScheme;
+  final Function(ColorScheme, int) onColorSchemeChanged;
+  final int colorIndex;
+
+  const MyTabletHomeScreen({
+    super.key,
+    required this.initialColorScheme,
+    required this.onColorSchemeChanged,
+    required this.colorIndex,
+  });
+
+  @override
+  State<MyTabletHomeScreen> createState() => _MyTabletHomeScreenState();
+}
+
+class _MyTabletHomeScreenState extends State<MyTabletHomeScreen> {
+  int? _activeIndex;
+  late Color activeColor;
+
+  @override
+  void initState() {
+    super.initState();
+    activeColor = widget.initialColorScheme.primary;
     FlutterNativeSplash.remove();
   }
 
   @override
   Widget build(BuildContext context) {
     // 提取所有颜色属性
-    final allColors = [
-      _ColorInfo(name: 'primary', color: scheme.primary),
-      _ColorInfo(name: 'onPrimary', color: scheme.onPrimary),
-      _ColorInfo(name: 'primaryContainer', color: scheme.primaryContainer),
-      _ColorInfo(name: 'onPrimaryContainer', color: scheme.onPrimaryContainer),
-      _ColorInfo(name: 'secondary', color: scheme.secondary),
-      _ColorInfo(name: 'onSecondary', color: scheme.onSecondary),
-      _ColorInfo(name: 'secondaryContainer', color: scheme.secondaryContainer),
-      _ColorInfo(name: 'onSecondaryContainer', color: scheme.onSecondaryContainer),
-      _ColorInfo(name: 'tertiary', color: scheme.tertiary),
-      _ColorInfo(name: 'onTertiary', color: scheme.onTertiary),
-      _ColorInfo(name: 'tertiaryContainer', color: scheme.tertiaryContainer),
-      _ColorInfo(name: 'onTertiaryContainer', color: scheme.onTertiaryContainer),
-      _ColorInfo(name: 'error', color: scheme.error),
-      _ColorInfo(name: 'onError', color: scheme.onError),
-      _ColorInfo(name: 'errorContainer', color: scheme.errorContainer),
-      _ColorInfo(name: 'onErrorContainer', color: scheme.onErrorContainer),
-      _ColorInfo(name: 'surface', color: scheme.surface),
-      _ColorInfo(name: 'onSurface', color: scheme.onSurface),
-      _ColorInfo(name: 'surfaceContainer', color: scheme.surfaceContainer),
-      _ColorInfo(name: 'onSurfaceVariant', color: scheme.onSurfaceVariant),
-      _ColorInfo(name: 'inverseSurface', color: scheme.inverseSurface),
-      _ColorInfo(name: 'onInverseSurface', color: scheme.onInverseSurface),
-      _ColorInfo(name: 'background', color: scheme.background),
-      _ColorInfo(name: 'onBackground', color: scheme.onBackground),
-    ];
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      showSemanticsDebugger: false,
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      home: WindowFrameWidget(
-          child: Scaffold(
-        body: Center(
-          child: Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16.0),
-                  child: Wrap(
-                    spacing: 16.0,
-                    runSpacing: 16.0,
-                    children: allColors
-                        .map((e) => _ColorBlock(
-                              name: e.name,
-                              color: e.color,
-                            ))
-                        .toList(),
-                  ),
-                ),
-              ),
-              SizedBox(width: 10),
-              buildImageSelector(),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("ColorScheme 总览"),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.settings),
           ),
-        ),
-      )),
+        ],
+      ),
+      body: Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ...List.generate(colors.length, (index) {
+                        // 使用 Padding 替代 Sizedbox 来控制间隔
+                        return InkWell(
+                          onTap: () {
+                            _onColorChange(index);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2.5),
+                            child: TriangleCorner(
+                              triangleColor: widget.colorIndex == index ? Colors.pinkAccent : Colors.transparent,
+                              position: TrianglePosition.left,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: colors[index],
+                                  // borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                  ColorSchemeDisplayWidget(
+                    colorScheme: widget.initialColorScheme,
+                    title: 'ColorScheme 总览',
+                    onColorCopied: () {
+                      logger.d('onColorCopied');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('颜色代码已复制到剪贴板'),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: widget.initialColorScheme.primary,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(width: 10),
+          buildImageSelector(),
+        ],
+      ),
     );
   }
 
   Widget buildImageSelector() {
     return Container(
-        width: 108,
-        padding: EdgeInsets.only(right: 8, top: 8),
-        child: ImageSelector(
-          images: assetsImage,
-          indicatorColor: scheme.primary,
-          onIndexChange: _onImageChange,
-          activeIndex: _activeIndex,
-        ));
+      width: 102,
+      padding: EdgeInsets.only(right: 2, top: 2),
+      child: ImageSelector(
+        images: assetsImage,
+        indicatorColor: widget.initialColorScheme.primary,
+        onIndexChange: _onImageChange,
+        activeIndex: _activeIndex,
+      ),
+    );
   }
 
   void _onImageChange(int index) async {
@@ -143,105 +219,18 @@ class _MyAppState extends State<MyTabletApp> {
       _activeIndex = index;
     });
     ImageProvider image = assetsImage[index];
-    scheme = await ColorScheme.fromImageProvider(provider: image);
+    ColorScheme scheme = await ColorScheme.fromImageProvider(provider: image);
     activeColor = scheme.primary;
+    // 将新的 ColorScheme 回传给父组件
+    widget.onColorSchemeChanged(scheme, -1);
+
     setState(() {});
   }
-}
 
-class _ColorInfo {
-  final String name;
-  final Color color;
-
-  _ColorInfo({required this.name, required this.color});
-}
-
-class ColorSection extends StatelessWidget {
-  final String title;
-  final List<_ColorInfo> colors;
-
-  const ColorSection({super.key, required this.title, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8.0),
-          Row(
-            children: colors
-                .map((e) => _ColorBlock(
-                      name: e.name,
-                      color: e.color,
-                    ))
-                .toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ColorBlock extends StatelessWidget {
-  final String name;
-  final Color color;
-
-  const _ColorBlock({
-    required this.name,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final hexCode = '#${color.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
-
-    return Container(
-      width: 150,
-      height: 80,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              name,
-              style: TextStyle(
-                color: _getContrastColor(color),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4.0),
-            Text(
-              hexCode,
-              style: TextStyle(
-                color: _getContrastColor(color),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Color _getContrastColor(Color color) {
-    return color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+  void _onColorChange(int index) async {
+    ColorScheme scheme = ColorScheme.fromSeed(seedColor: colors[index]);
+    activeColor = scheme.primary;
+    widget.onColorSchemeChanged(scheme, index);
+    setState(() {});
   }
 }

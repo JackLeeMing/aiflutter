@@ -18,7 +18,7 @@ const colors = [
   Color(0xFFFD8445),
   Color(0xFFFE8C4B),
   Color(0xFFF9A979),
-  Color(0xFF863E51)
+  Color(0xFF863E51),
 ];
 
 /// 控制器类，心跳控制
