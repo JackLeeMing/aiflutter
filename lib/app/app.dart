@@ -8,6 +8,7 @@ import 'package:aiflutter/widgets/window.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 /// 应用程序主入口页面 - iOS风格设置界面
 /// 提供类似iOS系统设置的列表界面，包含分组和导航功能
@@ -55,7 +56,7 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
           builder: (controller) => ListView.builder(
             key: const PageStorageKey<String>('settings_list'),
             controller: controller,
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             itemCount: settingsSections.length,
             itemBuilder: (context, index) {
               final section = settingsSections[index];
@@ -72,6 +73,7 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        TDTextarea(),
         // 分组标题
         if (section.title.isNotEmpty)
           Padding(

@@ -151,7 +151,7 @@ class _AIFlutterAppState extends State<AIFlutterApp> {
                 ),
 
                 // 卡片样式
-                cardTheme: CardTheme(
+                cardTheme: CardThemeData(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
