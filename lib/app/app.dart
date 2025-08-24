@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aiflutter/app/app_pages.dart';
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/router/context_extension.dart';
@@ -200,12 +202,16 @@ class _AppEntryPageState extends State<AppEntryPage> with AutomaticKeepAliveClie
     // 如果有自定义点击事件，也执行它
     final isCamera = item.isCamera;
     if (isCamera) {
-      checkCameraPermission(context, okBack: () {
-        showTDSuccessMessage(context, "正常调用系统相机!");
+      if (Platform.isIOS) {
         _goNextPage(item);
-      }, failBack: () {
-        showTDWarningMessage(context, "无法调用系统相机!");
-      });
+      } else {
+        checkCameraPermission(context, okBack: () {
+          showTDSuccessMessage(context, "正常调用系统相机!");
+          _goNextPage(item);
+        }, failBack: () {
+          showTDWarningMessage(context, "无法调用系统相机!");
+        });
+      }
     } else {
       _goNextPage(item);
     }

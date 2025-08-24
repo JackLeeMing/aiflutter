@@ -18,6 +18,13 @@ class CameraAwesomePage extends StatelessWidget {
 
   Widget buildC(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("相机"),
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+      ),
       body: Container(
         color: Colors.white,
         child: CameraAwesomeBuilder.awesome(
