@@ -1,7 +1,8 @@
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/router/app_routes.dart';
-// import 'package:aiflutter/router/flip_routes.dart';
-// import 'package:aiflutter/router/test_routes.dart';
+import 'package:aiflutter/router/flip_routes.dart';
+import 'package:aiflutter/router/routes.dart';
+import 'package:aiflutter/router/test_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -65,9 +66,9 @@ final _model = SettingsSection(
 final List<SettingsSection> settingsSections = [
   _love,
   _system,
-  // buildFlipSection("Flip"),
-  // buildTestSection("Test+GoRoute扩展"),
-  // _model,
-  // buildOtherSection("Other"),
-  //  _listSection,
+  buildFlipSection("Flip"),
+  buildTestSection("Test+GoRoute扩展"),
+  _model,
+  buildOtherSection("Other"),
+  listSection,
 ];

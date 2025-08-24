@@ -1,13 +1,8 @@
 {
-  "cSpell.words": [
-    "aiutilsbox",
-    "Hibition"
-  ],
+  "cSpell.words": ["aiutilsbox", "Hibition"],
   "dart.flutterSdkPath": ".fvm/versions/3.32.8",
   "[dart]": {
-    "editor.rulers": [
-      120
-    ],
+    "editor.rulers": [120],
     "editor.formatOnSave": true
   },
   "dart.lineLength": 120
