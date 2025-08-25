@@ -547,6 +547,22 @@ class HeartPainter extends CustomPainter {
   final double scale;
   final Color color;
   final double alpha;
+  // 定义多个心形的配置：大小比例、位置偏移、透明度
+  final hearts = [
+    // 主心形
+    {'scale': 1.0, 'offsetX': 0.0, 'offsetY': 0.0, 'alpha': 1.0},
+    // 左上小心形
+    {'scale': 0.3, 'offsetX': -80.0, 'offsetY': -60.0, 'alpha': 0.6},
+    // 右上小心形
+    {'scale': 0.25, 'offsetX': 85.0, 'offsetY': -70.0, 'alpha': 0.5},
+    // 左下小心形
+    {'scale': 0.2, 'offsetX': -90.0, 'offsetY': 80.0, 'alpha': 0.4},
+    // 右下小心形
+    {'scale': 0.28, 'offsetX': 75.0, 'offsetY': 85.0, 'alpha': 0.55},
+    // 额外的小心形
+    {'scale': 0.15, 'offsetX': -40.0, 'offsetY': -120.0, 'alpha': 0.3},
+    {'scale': 0.18, 'offsetX': 110.0, 'offsetY': 20.0, 'alpha': 0.35},
+  ];
 
   HeartPainter({
     required this.scale,
@@ -558,35 +574,15 @@ class HeartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // 心形的基础大小
     final baseSize = min(size.width, size.height) * 0.4;
-
     // 心形中心点
     final centerX = size.width / 2;
     final centerY = size.height / 2;
-
-    // 定义多个心形的配置：大小比例、位置偏移、透明度
-    final hearts = [
-      // 主心形
-      {'scale': 1.0, 'offsetX': 0.0, 'offsetY': 0.0, 'alpha': 1.0},
-      // 左上小心形
-      {'scale': 0.3, 'offsetX': -80.0, 'offsetY': -60.0, 'alpha': 0.6},
-      // 右上小心形
-      {'scale': 0.25, 'offsetX': 85.0, 'offsetY': -70.0, 'alpha': 0.5},
-      // 左下小心形
-      {'scale': 0.2, 'offsetX': -90.0, 'offsetY': 80.0, 'alpha': 0.4},
-      // 右下小心形
-      {'scale': 0.28, 'offsetX': 75.0, 'offsetY': 85.0, 'alpha': 0.55},
-      // 额外的小心形
-      {'scale': 0.15, 'offsetX': -40.0, 'offsetY': -120.0, 'alpha': 0.3},
-      {'scale': 0.18, 'offsetX': 110.0, 'offsetY': 20.0, 'alpha': 0.35},
-    ];
-
     // 绘制每个心形
     for (final heartConfig in hearts) {
       final heartScale = heartConfig['scale']!;
       final offsetX = heartConfig['offsetX']!;
       final offsetY = heartConfig['offsetY']!;
       final heartAlpha = heartConfig['alpha']! * alpha;
-
       _drawSingleHeart(canvas, centerX + offsetX, centerY + offsetY, baseSize * heartScale * scale, heartAlpha);
     }
   }

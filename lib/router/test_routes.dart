@@ -2,6 +2,7 @@
 import 'package:aiflutter/models/section.dart';
 import 'package:aiflutter/pages/i18n_display_page.dart';
 import 'package:aiflutter/pages/setting_screen_page.dart';
+import 'package:aiflutter/pages/shimmer_slide_lock_page.dart';
 import 'package:aiflutter/pages/shop_cart_page.dart';
 import 'package:aiflutter/utils/colors.dart';
 import 'package:aiflutter/utils/icons.dart';
@@ -12,6 +13,11 @@ import 'package:go_router/go_router.dart';
 import './go_route_extension.dart';
 
 final testRoutes = [
+  GoRoute(
+    path: '/shimmer',
+    name: "SlideToUnlockPage",
+    pageBuilder: (context, state) => transitionResolver(WindowFrameWidget(child: SlideToUnlockPage())),
+  ),
   GoRoute(
     path: '/cart',
     name: "AddToCartAnimationPage",
