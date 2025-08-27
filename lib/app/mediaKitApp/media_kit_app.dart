@@ -117,6 +117,7 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
   }
 
   void onItemClick(String number) {
+    player.stop();
     setState(() {
       videoKey = number;
     });
