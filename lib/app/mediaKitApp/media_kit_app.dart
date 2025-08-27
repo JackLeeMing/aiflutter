@@ -15,7 +15,7 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
   late final Player player = Player();
   late final VideoController controller = VideoController(player);
   bool isPlaying = false;
-  String videoKey = "1";
+  String videoKey = "flv";
   final videoUrlMap = {
     'flv': 'https://www.sensorcmd.com/video6/rtp/34020000001110000016_61062900041317000010.live.flv?vip=smart_guy',
     'hls': 'https://www.sensorcmd.com/video6/rtp/34020000001110000016_61062900041317000010/hls.m3u8?vip=smart_guy',
@@ -36,22 +36,22 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
     });
     // 监听缓冲状态
     player.stream.buffering.listen((buffering) {
-      logger.d('缓冲中: $buffering');
+      // logger.d('缓冲中: $buffering');
     });
 
     // 监听播放位置
     player.stream.position.listen((position) {
-      logger.d('播放位置: ${position.inSeconds}秒');
+      // logger.d('播放位置: ${position.inSeconds}秒');
     });
 
     // 监听时长
     player.stream.duration.listen((duration) {
-      logger.d('总时长: ${duration.inSeconds}秒');
+      // logger.d('总时长: ${duration.inSeconds}秒');
     });
 
     // 监听播放完成
     player.stream.completed.listen((completed) {
-      logger.d('播放完成: $completed');
+      // logger.d('播放完成: $completed');
     });
 
     // 监听错误
@@ -80,15 +80,6 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
         body: Center(
             child: Column(
           children: [
-            Text(
-              videoKey,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 16),
             buildGrid(),
             SizedBox(height: 16),
             SizedBox(
@@ -125,6 +116,23 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
     super.dispose();
   }
 
+  void onItemClick(String number) {
+    setState(() {
+      videoKey = number;
+    });
+    /*
+    WidgetsBinding.instance.addPostFrameCallback 
+    允许你注册一个回调函数，这个函数会在当前帧渲染完成后、
+    UI 树重建之后立即被调用。这非常适合用来执行那些需要依赖于 UI 布局或渲染结果的操作
+    */
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      player.open(
+        Media(videoUrlMap[number]!),
+      );
+      player.play();
+    });
+  }
+
   Widget buildGrid() {
     List<String> keysList = videoUrlMap.keys.toList();
     List<Widget> widgets = List.generate(keysList.length, (int index) {
@@ -137,9 +145,9 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
             color: isSel ? Colors.red : Colors.blue,
             borderRadius: BorderRadius.circular(8),
           ),
-          width: 25,
+          width: 50,
           height: 25,
-          margin: EdgeInsets.all(1),
+          margin: EdgeInsets.all(5),
           child: Text(
             number,
             style: const TextStyle(
@@ -149,17 +157,24 @@ class _MediaKitPlayerState extends State<MediaKitPlayerPage> {
             ),
           ),
         ),
-        onTap: () {
-          setState(() {
-            videoKey = number;
-          });
-        },
+        onTap: () => onItemClick(number),
       );
     });
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [...widgets],
+      children: [
+        ...widgets,
+        SizedBox(width: 16),
+        Text(
+          videoKey,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }
